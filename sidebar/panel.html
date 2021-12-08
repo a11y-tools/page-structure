@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="panel.css"/>
+    <link rel="stylesheet" href="../listbox.css"/>
+  </head>
+
+<body>
+  <h2 id="page-title-label"></h2>
+  <div id="page-title-content" class="content" aria-labelledby="page-title-label" tabindex="0"></div>
+  <h2 id="headings-label"></h2>
+  <div id="headings-content" class="listbox" aria-labelledby="headings-label" tabindex="0"></div>
+  <div>
+    <button id="search-button" class="search" disabled></button>
+    <button id="clear-button" class="search"></button>
+  </div>
+  <details>
+    <summary id="help-label"></summary>
+    <ul>
+      <li id="help-highlight"></li>
+      <li id="help-activate"></li>
+      <li id="help-focus"></li>
+    </ul>
+  </details>
+  <script src="panel.js" type="module"></script>
+</body>
+
+</html>

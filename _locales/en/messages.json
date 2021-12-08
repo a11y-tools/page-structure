@@ -1,0 +1,71 @@
+{
+  "extensionName": {
+    "message": "Page Structure",
+    "description": "Name of the extension"
+  },
+
+  "extensionDescription": {
+    "message": "Collect structural information, such as page title and headings, from the active tab.",
+    "description": "Description of the extension"
+  },
+
+  "pageTitleLabel": {
+    "message": "Title",
+    "description": "Label for page title"
+  },
+
+  "headingsLabel": {
+    "message": "Headings",
+    "description": "Label for list of headings"
+  },
+
+  "searchButtonLabel": {
+    "message": "Highlight Selected",
+    "description": "Label for search-button"
+  },
+
+  "clearButtonLabel": {
+    "message": "Clear Highlighting",
+    "description": "Label for clear-button"
+  },
+
+  "helpLabel": {
+    "message": "Instructions",
+    "description": "Label for help/instructions"
+  },
+
+  "helpHighlight": {
+    "message": "When you activate the selected heading in the list, the heading is highlighted on the page and scrolled into view.",
+    "description": "Help text describing how to highlight the selected heading on the page."
+  },
+
+  "helpActivate": {
+    "message": "To activate the selected heading, use the 'Highlight Selected' button, or press 'enter' or 'return', or double-click the selection.",
+    "description": "Help text describing how to activate the selected heading."
+  },
+
+  "helpFocus": {
+    "message": "When a heading is highlighted on the page, using 'F6' to move focus to the page will cause the heading to receive focus.",
+    "description": "Help text describing how to move focus to selected heading."
+  },
+
+  "emptyContent": {
+    "message": "&lt;empty&gt;",
+    "description": "Message indicating that DOM element has no text content."
+  },
+
+  "noHeadingElements": {
+    "message": "No HTML heading elements found!",
+    "description": "Message indicating that no heading elements were found in the document."
+  },
+
+  "tabIsLoading": {
+    "message": "Updating...",
+    "description": "Message indicating that content in the sidebar panel is being updated."
+  },
+
+  "protocolNotSupported": {
+    "message": "Protocol not supported; unable to retrieve content information.",
+    "description": "Message explaining that content script cannot be executed."
+  }
+}
