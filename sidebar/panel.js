@@ -8,7 +8,13 @@ import { saveOptions } from '../storage.js';
 var contentPort;
 var myWindowId;
 var listBox;
-var debug = true;
+
+function logToConsole (...args) {
+  if (true) {
+    if (args.length === 1) console.debug(args[0]);
+    else console.debug(args);
+  }
+}
 
 // Get message strings from locale-specific messages.json file
 const getMessage = browser.i18n.getMessage;
@@ -48,7 +54,6 @@ function addLabelsAndHelpContent () {
 browser.runtime.onConnect.addListener(connectionHandler);
 
 function connectionHandler (port) {
-  if (debug) console.log(`port.name: ${port.name}`);
   contentPort = port;
   contentPort.onMessage.addListener(portMessageHandler);
   contentPort.postMessage({ id: 'getInfo' });
@@ -76,7 +81,7 @@ browser.windows.getCurrent({ populate: true }).then( (windowInfo) => {
 *   Generic error handler
 */
 function onError (error) {
-  console.log(`Error: ${error}`);
+  console.error(`Error: ${error}`);
 }
 
 //--------------------------------------------------------------
@@ -91,11 +96,11 @@ function onListBoxAction (data) {
 
   switch (data.action) {
     case 'navigate':
-      if (debug) console.log(`navigate: ${data.index}`);
+      logToConsole(`navigate: ${data.index}`);
       updateButton(false);
       break;
     case 'activate':
-      if (debug) console.log(`activate: ${data.index}`)
+      logToConsole(`activate: ${data.index}`)
       sendButtonActivationMessage({
         id: 'find',
         index: data.index
@@ -179,7 +184,7 @@ function handleTabUpdated (tabId, changeInfo, tab) {
 *   Handle tabs.onActivated event
 */
 function handleTabActivated (activeInfo) {
-  if (debug) console.log('activeInfo: ', activeInfo);
+  // logToConsole('activeInfo: ', activeInfo);
 
   runContentScripts('handleTabActivated');
 }
@@ -198,12 +203,12 @@ function handleWindowFocusChanged (windowId) {
     if (result) {
       myWindowId = windowId;
       runContentScripts('onFocusChanged');
-      if (debug) console.log(`Focus changed to window: ${myWindowId}`);
+      logToConsole(`Focus changed to window: ${myWindowId}`);
     }
   }
 
   function onInvalidId (error) {
-    if (debug) console.log(`onInvalidId: ${error}`);
+    console.error(`onInvalidId: ${error}`);
   }
 }
 
@@ -287,7 +292,7 @@ function updateSidebar (message) {
 *   the handler calls the updateSidebar function with the structure info.
 */
 function runContentScripts (callerFn) {
-  if (debug) console.log(`runContentScripts invoked by ${callerFn}`);
+  logToConsole(`runContentScripts invoked by ${callerFn}`);
 
   getActiveTabFor(myWindowId).then(tab => {
     if (tab.url.indexOf('http:') === 0 || tab.url.indexOf('https:') === 0) {

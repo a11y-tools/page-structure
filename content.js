@@ -19,6 +19,9 @@ var focusProperties = `{
   outline: 3px dotted purple;
 }`;
 
+console.debug('------------------------');
+console.debug(`URL: ${document.URL}`);
+
 /*
 **  Connect to panel.js script and set up listener/handler
 */

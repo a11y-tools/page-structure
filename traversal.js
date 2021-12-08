@@ -130,7 +130,7 @@ function getChildren (element) {
     const assignedElements = (element.assignedElements().length)
       ? element.assignedElements()
       : element.assignedElements({ flatten: true });
-    console.log(`<slot> name: ${element.name || 'null'}, items: ${assignedElements.length}`);
+    console.debug(`<slot> name: ${element.name || 'null'}, items: ${assignedElements.length}`);
     return assignedElements;
   }
   // custom element
@@ -186,16 +186,16 @@ function saveLandmarkInfo (element, info, ancestor) {
 }
 
 function logLandmarkNodes (root) {
-  console.log('------------------------');
+  console.debug('------------------------');
   function traverseNodes (startNode, level) {
     startNode.descendants.forEach(node => {
       const text = `${node.value.role}: ${node.value.name}`;
-      console.log(text.padStart(text.length + (level*2), '-'));
+      console.debug(text.padStart(text.length + (level*2), '-'));
       traverseNodes(node, level+1);
     });
   }
   traverseNodes(root, 0);
-  console.log('------------------------');
+  console.debug('------------------------');
 }
 
 /*
