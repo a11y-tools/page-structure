@@ -163,13 +163,10 @@ function saveHeadingInfo (element, info) {
   }
 }
 
-class TreeNode {
-  constructor (value) {
-    this.value = value;
-    this.descendants = [];
-  }
-  addDescendant (treeNode) {
-    this.descendants.push(treeNode);
+function getLandmarkNode (value) {
+  return {
+    value: value,
+    descendants: []
   }
 }
 
@@ -177,12 +174,12 @@ function saveLandmarkInfo (element, info, ancestor) {
   let landmarkNode = null;
   const landmarkInfo = testForLandmark(element);
   if (landmarkInfo && landmarkInfo.visible) {
-    landmarkNode = new TreeNode(landmarkInfo);
+    landmarkNode = getLandmarkNode(landmarkInfo);
     if (ancestor === null) {
-      info.landmarks.addDescendant(landmarkNode);
+      info.landmarks.descendants.push(landmarkNode);
     }
     else {
-      ancestor.addDescendant(landmarkNode);
+      ancestor.descendants.push(landmarkNode);
     }
   }
   return landmarkNode;
@@ -208,7 +205,7 @@ function logLandmarkNodes (root) {
 function getStructureInfo (panelPort) {
   const info = {
     headings: [],
-    landmarks: new TreeNode('root')
+    landmarks: getLandmarkNode('root') // tree data structure
   };
 
   // Reset headingRefs array (defined in content.js)
