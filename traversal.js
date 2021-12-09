@@ -14,6 +14,24 @@ function isSlot (element) {
   return (element instanceof HTMLSlotElement);
 }
 
+function isSkippable (element) {
+  const skippableNames = [
+    'BASE',
+    'LINK',
+    'META',
+    'NOSCRIPT',
+    'SCRIPT',
+    'STYLE',
+    'TEMPLATE',
+    'TITLE'
+  ];
+  if (skippableNames.includes(element.tagName)) {
+    console.debug(`Skipping element: ${element.tagName}`);
+    return true;
+  }
+  return false;
+}
+
 /*
 *   getLandmarkInfo: The 'name' param will be defined when the accessible name
 *   was already evaluated as a criterion for determining whether 'element' is
@@ -147,11 +165,12 @@ function getChildren (element) {
 }
 
 function getHeadingInfo (element) {
-  const results = [];
-  getDescendantTextContent(element, isVisible, results);
+  const contentArray = [];
+  getDescendantTextContent(element, isVisible, contentArray);
   return {
     name: element.tagName,
-    text: results.length ? results.join(' ') : ''
+    text: contentArray.length ? contentArray.join(' ') : '',
+    visible: isVisible(element)
   }
 }
 
@@ -216,17 +235,21 @@ function getStructureInfo (panelPort) {
     // to whether startElement is (or is part of) a custom element
     const children = getChildren(startElement);
 
-    children.forEach(element => {
+    for (const element of children) {
+      if (isSkippable(element)) continue;
+
       // Save information if element meets certain criteria
       saveHeadingInfo(element, info);
       const landmarkNode = saveLandmarkInfo(element, info, ancestor);
 
       // Recursively visit children of element
       traverseDom(element, landmarkNode);
-    });
+    }
   }
 
-  traverseDom(document.body, null);
+  const documentStart =
+    (document.body === null) ? document.documentElement : document.body;
+  traverseDom(documentStart, null);
   logLandmarkNodes(info.landmarks);
 
   // Send structure info to the panel.js script
