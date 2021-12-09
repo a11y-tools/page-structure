@@ -175,7 +175,7 @@ function getHeadingInfo (element) {
 }
 
 function saveHeadingInfo (element, info) {
-  if (isHeading(element) && isVisible(element)) {
+  if (isHeading(element)) {
     const headingInfo = getHeadingInfo(element);
     info.headings.push(headingInfo);
     headingRefs.push(element);

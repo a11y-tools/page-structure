@@ -242,6 +242,7 @@ function getClassNames (name) {
 function getFormattedHeadings (infoList) {
   let html = '';
   for (let i = 0; i < infoList.length; i++) {
+    if (!(infoList[i].visible)) continue;
     let name = infoList[i].name, text = infoList[i].text;
     if (text.trim() === '') text = `<span class="empty">${emptyContent}</span>`;
     let classNames = getClassNames(name);
@@ -256,7 +257,7 @@ function getFormattedHeadings (infoList) {
 */
 function updateSidebar (message) {
   let pageTitle = document.getElementById('page-title-content');
-  let headings = document.getElementById('headings-content');
+  let headingsDiv = document.getElementById('headings-content');
 
   if (typeof message === 'object') {
     const info = message.info;
@@ -265,18 +266,18 @@ function updateSidebar (message) {
     pageTitle.innerHTML = getFormattedTitle(message);
 
     // Update the headings box
-    if (info.headings.length) {
-      headings.innerHTML = getFormattedHeadings(info.headings);
-      listBox = new ListBox(headings, onListBoxAction);
+    if (info.headings.filter(item => item.visible).length) {
+      headingsDiv.innerHTML = getFormattedHeadings(info.headings);
+      listBox = new ListBox(headingsDiv, onListBoxAction);
       updateButton(true);
     }
     else {
-      headings.innerHTML = `<div class="grid-message">${noHeadingElements}</div>`;
+      headingsDiv.innerHTML = `<div class="grid-message">${noHeadingElements}</div>`;
     }
   }
   else {
     pageTitle.textContent = message;
-    headings.textContent = '';
+    headingsDiv.textContent = '';
   }
 }
 
