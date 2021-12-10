@@ -113,7 +113,7 @@ function onListBoxAction (data) {
 *   updateButton
 */
 function updateButton (flag) {
-  let button = document.getElementById('search-button');
+  const button = document.getElementById('search-button');
 
   if (flag) {
     button.setAttribute('disabled', true);
@@ -195,16 +195,15 @@ function handleTabActivated (activeInfo) {
 */
 function handleWindowFocusChanged (windowId) {
   if (windowId !== myWindowId) {
-    let checkingOpenStatus = browser.sidebarAction.isOpen({ windowId });
-    checkingOpenStatus.then(onGotStatus, onInvalidId);
-  }
-
-  function onGotStatus (result) {
-    if (result) {
-      myWindowId = windowId;
-      runContentScripts('onFocusChanged');
-      logToConsole(`Focus changed to window: ${myWindowId}`);
-    }
+    browser.sidebarAction.isOpen({ windowId })
+    .then(isOpen => {
+      if (isOpen) {
+        myWindowId = windowId;
+        runContentScripts('onFocusChanged');
+        logToConsole(`Focus changed to window: ${myWindowId}`);
+      }
+    })
+    .catch(onInvalidId);
   }
 
   function onInvalidId (error) {
@@ -245,7 +244,7 @@ function getFormattedHeadings (infoList) {
     if (!(infoList[i].visible)) continue;
     let name = infoList[i].name, text = infoList[i].text;
     if (text.trim() === '') text = `<span class="empty">${emptyContent}</span>`;
-    let classNames = getClassNames(name);
+    const classNames = getClassNames(name);
     html += `<div class="list-option"><div class="${classNames[0]}">${name}</div><div \
     class="${classNames[1]}">${text}</div></div>`;
   }
@@ -256,8 +255,8 @@ function getFormattedHeadings (infoList) {
 *   Display the structure information collected by the content script
 */
 function updateSidebar (message) {
-  let pageTitle = document.getElementById('page-title-content');
-  let headingsDiv = document.getElementById('headings-content');
+  const pageTitle = document.getElementById('page-title-content');
+  const headingsDiv = document.getElementById('headings-content');
 
   if (typeof message === 'object') {
     const info = message.info;
@@ -313,7 +312,7 @@ function runContentScripts (callerFn) {
 */
 function getActiveTabFor (windowId) {
   return new Promise (function (resolve, reject) {
-    let promise = browser.tabs.query({ windowId: windowId, active: true });
+    const promise = browser.tabs.query({ windowId: windowId, active: true });
     promise.then(
       tabs => { resolve(tabs[0]) },
       msg => { reject(new Error(`getActiveTabInWindow: ${msg}`)); }
