@@ -1,6 +1,16 @@
-# README
+# README.md
 
-## How it works
+## How messaging works in `structure-4`
+
+The approach to messaging between the extension and its content scripts in
+this version makes use of a 'long-lived connection' as opposed to the simpler
+'one-time request' approach.
+
+See the browser extension messaging documentation at
+* https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts
+* https://developer.chrome.com/docs/extensions/mv3/messaging/
+
+for in-depth explanations of the differences.
 
 `panel.js`
 * Sets up connection and message handlers for exchanges with `content.js`
