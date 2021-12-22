@@ -2,8 +2,8 @@
 *   panel.js
 */
 
-import ListBox from '../listbox.js';
-import { saveOptions } from '../storage.js';
+import ListBox from './listbox.js';
+import { saveOptions } from './storage.js';
 
 var contentPort;
 var myWindowId;
@@ -296,9 +296,9 @@ function runContentScripts (callerFn) {
 
   getActiveTabFor(myWindowId).then(tab => {
     if (tab.url.indexOf('http:') === 0 || tab.url.indexOf('https:') === 0) {
-      browser.tabs.executeScript(tab.id, { file: '../utils.js' });
-      browser.tabs.executeScript(tab.id, { file: '../traversal.js' });
-      browser.tabs.executeScript(tab.id, { file: '../content.js' });
+      browser.tabs.executeScript(tab.id, { file: 'scripts/utils.js' });
+      browser.tabs.executeScript(tab.id, { file: 'scripts/traversal.js' });
+      browser.tabs.executeScript(tab.id, { file: 'scripts/content.js' });
     }
     else {
       updateSidebar (protocolNotSupported);
