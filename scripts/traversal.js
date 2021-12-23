@@ -167,11 +167,10 @@ function getChildren (element) {
   return Array.from(element.children);
 }
 
-function getHeadingInfo (element, id) {
+function getHeadingInfo (element) {
   const contentArray = [];
   getDescendantTextContent(element, isVisible, contentArray);
   return {
-    dataId: id,
     name: element.tagName,
     text: contentArray.length ? contentArray.join(' ') : '',
     visible: isVisible(element)
@@ -181,15 +180,15 @@ function getHeadingInfo (element, id) {
 function saveHeadingInfo (element, info) {
   if (isHeading(element)) {
     const dataId = `h-${++counter}`;
+    const headingInfo = getHeadingInfo(element);
+    headingInfo.dataId = dataId;
     element.setAttribute(dataAttribName, dataId);
-    const headingInfo = getHeadingInfo(element, dataId);
     info.headings.push(headingInfo);
   }
 }
 
-function getLandmarkNode (value, id) {
+function getLandmarkNode (value) {
   return {
-    dataId: id,
     value: value,
     descendants: []
   }
@@ -200,8 +199,9 @@ function saveLandmarkInfo (element, info, ancestor) {
   const landmarkInfo = testForLandmark(element);
   if (landmarkInfo && landmarkInfo.visible) {
     const dataId = `l-${++counter}`;
+    landmarkInfo.dataId = dataId;
     element.setAttribute(dataAttribName, dataId);
-    landmarkNode = getLandmarkNode(landmarkInfo, dataId);
+    landmarkNode = getLandmarkNode(landmarkInfo);
     if (ancestor === null) {
       info.landmarks.descendants.push(landmarkNode);
     }
