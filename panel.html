@@ -10,8 +10,14 @@
 <body>
   <h2 id="page-title-label"></h2>
   <div id="page-title-content" class="content" aria-labelledby="page-title-label" tabindex="0"></div>
-  <h2 id="headings-label"></h2>
-  <div id="headings-content" class="listbox" aria-labelledby="headings-label" tabindex="0"></div>
+
+  <tab-set>
+    <span slot="tab-1">Headings</span>
+    <span slot="tab-2">Landmarks</span>
+    <div slot="panel-1" id="listbox-1" class="listbox"></div>
+    <div slot="panel-2" id="listbox-2" class="listbox"></div>
+  </tab-set>
+
   <div>
     <button id="search-button" class="search" disabled></button>
     <button id="clear-button" class="search"></button>

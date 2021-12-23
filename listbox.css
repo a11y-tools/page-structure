@@ -4,14 +4,14 @@
 
 .listbox {
   position: relative;
-  height: 60%;
+  height: 360px;
   overflow-y: auto;
 
   display: grid;
   grid-auto-rows: min-content;
   grid-row-gap: 2px;
 
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   padding: 5px;
 }
 

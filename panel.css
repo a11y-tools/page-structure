@@ -11,6 +11,11 @@ body > h2 {
   padding: 0;
 }
 
+tab-set {
+  height:  360px;
+  margin-top:  1rem;
+}
+
 .content {
   overflow-y: auto;
   border: 1px solid #ddd;
