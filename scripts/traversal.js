@@ -2,6 +2,9 @@
 *   traversal.js
 */
 
+const dataAttribName = 'data-ilps';
+var counter = 0;
+
 function isCustom (element) {
   return (element.tagName.indexOf('-') > 0);
 }
@@ -164,10 +167,11 @@ function getChildren (element) {
   return Array.from(element.children);
 }
 
-function getHeadingInfo (element) {
+function getHeadingInfo (element, id) {
   const contentArray = [];
   getDescendantTextContent(element, isVisible, contentArray);
   return {
+    dataId: id,
     name: element.tagName,
     text: contentArray.length ? contentArray.join(' ') : '',
     visible: isVisible(element)
@@ -176,14 +180,16 @@ function getHeadingInfo (element) {
 
 function saveHeadingInfo (element, info) {
   if (isHeading(element)) {
-    const headingInfo = getHeadingInfo(element);
+    const dataId = `h-${++counter}`;
+    element.setAttribute(dataAttribName, dataId);
+    const headingInfo = getHeadingInfo(element, dataId);
     info.headings.push(headingInfo);
-    headingRefs.push(element);
   }
 }
 
-function getLandmarkNode (value) {
+function getLandmarkNode (value, id) {
   return {
+    dataId: id,
     value: value,
     descendants: []
   }
@@ -193,7 +199,9 @@ function saveLandmarkInfo (element, info, ancestor) {
   let landmarkNode = null;
   const landmarkInfo = testForLandmark(element);
   if (landmarkInfo && landmarkInfo.visible) {
-    landmarkNode = getLandmarkNode(landmarkInfo);
+    const dataId = `l-${++counter}`;
+    element.setAttribute(dataAttribName, dataId);
+    landmarkNode = getLandmarkNode(landmarkInfo, dataId);
     if (ancestor === null) {
       info.landmarks.descendants.push(landmarkNode);
     }
