@@ -32,10 +32,8 @@ function addLabelsAndHelpContent () {
   // page-title-label and headings-label
   document.getElementById('page-title-label').textContent =
     getMessage("pageTitleLabel");
-/*
   document.getElementById('headings-label').textContent =
     getMessage("headingsLabel");
-*/
 
   // button labels
   document.getElementById('search-button').textContent =

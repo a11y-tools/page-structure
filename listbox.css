@@ -2,16 +2,16 @@
 *   listbox.css
 */
 
-.listbox {
+.listbox-container {
   position: relative;
-  height: 360px;
+  height: 100%;
   overflow-y: auto;
 
   display: grid;
   grid-auto-rows: min-content;
   grid-row-gap: 2px;
 
-  /* border: 1px solid #ddd; */
+  border: 1px solid #ddd;
   padding: 5px;
 }
 

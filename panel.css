@@ -30,10 +30,6 @@ tab-set {
   margin: 0.5em 0;
 }
 
-#headings-content {
-  height: 80%;
-}
-
 body > details {
   height: 10%;
 }
@@ -52,43 +48,13 @@ body > details li:not(:first-child) {
   margin-top: 0.66em;
 }
 
-.h1-name, .h2-name, .h3-name, .h4-name, .h5-name, .h6-name {
-  color: #999;
-  font-size: 85%;
-  margin-top: 1.4px;
-  text-transform: lowercase;
+headings-box {
+  height: 70%;
+  margin-top: 0.5rem;
 }
 
-.h1-text, .h2-text, .h3-text, .h4-text, .h5-text, .h6-text {
-  /*
-  *   Change user-select value to 'all' if heading text content problems
-  *   are resolved (by using getElementContent and isVisible functions).
-  */
-  /* user-select: all; */
-}
-
-.h1-name { grid-column: 1; }
-.h1-text { grid-column: 2 / span 6; }
-
-.h2-name { grid-column: 2; }
-.h2-text { grid-column: 3 / span 5; }
-
-.h3-name { grid-column: 3; }
-.h3-text { grid-column: 4 / span 4; }
-
-.h4-name { grid-column: 4; }
-.h4-text { grid-column: 5 / span 3; }
-
-.h5-name { grid-column: 5; }
-.h5-text { grid-column: 6 / span 2; }
-
-.h6-name { grid-column: 6; }
-.h6-text { grid-column: 7; }
-
-.grid-message { grid-column: 1 / span 7; }
-
-span.empty {
-  color: #999;
+.buttons-container {
+  margin-top: 1rem;
 }
 
 button.search {
