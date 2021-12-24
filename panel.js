@@ -2,16 +2,16 @@
 *   panel.js
 */
 
-import TabSet from './tabset.js';
-import TabEvents from './tabevents.js';
-import ListBox from './listbox.js';
+// import TabSet from './tabset.js';
+// import TabEvents from './tabevents.js';
+import { HeadingsBox } from './listbox.js';
 import { saveOptions } from './storage.js';
 
-var tabSet = document.querySelector('tab-set');
-var tabEvents = new TabEvents(tabSet.tabs, tabSet.panels);
+// var tabSet = document.querySelector('tab-set');
+// var tabEvents = new TabEvents(tabSet.tabs, tabSet.panels);
+var headingsBox = document.querySelector('headings-box');
 var contentPort;
 var myWindowId;
-var listBox;
 
 function logToConsole (...args) {
   if (true) {
@@ -262,8 +262,8 @@ function getFormattedHeadings (infoList) {
 */
 function updateSidebar (message) {
   const pageTitle = document.getElementById('page-title-content');
-  const headingsDiv = document.getElementById('listbox-1');
-  headingsDiv.classList.add('listbox');
+  // const headingsDiv = document.getElementById('listbox-1');
+  // headingsDiv.classList.add('listbox');
 
   if (typeof message === 'object') {
     const info = message.info;
@@ -273,8 +273,9 @@ function updateSidebar (message) {
 
     // Update the headings box
     if (info.headings.filter(item => item.visible).length) {
-      headingsDiv.innerHTML = getFormattedHeadings(info.headings);
-      listBox = new ListBox(headingsDiv, onListBoxAction);
+      // headingsDiv.innerHTML = getFormattedHeadings(info.headings);
+      // listBox = new ListBox(headingsDiv, onListBoxAction);
+      headingsBox.options = info.headings;
       updateButton(true);
     }
     else {
@@ -283,7 +284,8 @@ function updateSidebar (message) {
   }
   else {
     pageTitle.textContent = message;
-    headingsDiv.textContent = '';
+    headingsBox.clearOptions();
+    // headingsDiv.textContent = '';
   }
 }
 
