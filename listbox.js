@@ -75,6 +75,7 @@ class HeadingsBox extends ListBox {
   }
 
   set options (infoArray) {
+    const emptyMessage = browser.i18n.getMessage("emptyContent");
     this.clearOptions();
 
     // Configure each list item with heading info
@@ -90,7 +91,14 @@ class HeadingsBox extends ListBox {
 
       let textSpan = document.createElement('span');
       textSpan.classList.add(classNames[1]);
-      textSpan.textContent = info.text;
+      // Check for empty heading content
+      if (info.text.trim() === '') {
+        textSpan.classList.add('empty');
+        textSpan.textContent = emptyMessage;
+      }
+      else {
+        textSpan.textContent = info.text;
+      }
       option.appendChild(textSpan);
 
       this.list.appendChild(option);

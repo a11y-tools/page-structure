@@ -22,8 +22,6 @@ function logToConsole (...args) {
 
 // Get message strings from locale-specific messages.json file
 const getMessage = browser.i18n.getMessage;
-
-const emptyContent         = getMessage("emptyContent");
 const noHeadingElements    = getMessage("noHeadingElements");
 const tabIsLoading         = getMessage("tabIsLoading");
 const protocolNotSupported = getMessage("protocolNotSupported");

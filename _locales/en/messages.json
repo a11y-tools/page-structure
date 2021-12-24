@@ -50,7 +50,7 @@
   },
 
   "emptyContent": {
-    "message": "&lt;empty&gt;",
+    "message": "[empty]",
     "description": "Message indicating that DOM element has no text content."
   },
 
