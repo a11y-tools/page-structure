@@ -235,8 +235,7 @@ function getStructureInfo (panelPort) {
     landmarks: getLandmarkNode('root') // tree data structure
   };
 
-  // Reset headingRefs array (defined in content.js)
-  headingRefs = [];
+  removeDataAttributes(); // clean up from any previous traversal
 
   function traverseDom (startElement, ancestor) {
     // getChildren returns an array of elements based on criteria related
@@ -268,4 +267,15 @@ function getStructureInfo (panelPort) {
   };
 
   panelPort.postMessage(message);
+}
+
+/*
+*   removeDataAttributes: Prevent attribute values from being out-of-sync
+*/
+function removeDataAttributes () {
+  const dataElements = document.querySelectorAll(`[${dataAttribName}]`);
+  console.log(`dataElements: ${dataElements.length}`);
+  dataElements.forEach(elem => {
+    elem.removeAttribute(dataAttribName);
+  })
 }

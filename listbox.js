@@ -35,6 +35,10 @@ class ListBox extends HTMLElement {
 
     // Reference to list container element
     this.list = this.shadowRoot.querySelector('[role="listbox"]');
+
+    this.onActivated = function (option) {
+      console.log('activated: ', option.getAttribute(dataAttribName));
+    };
   }
 
   createOption (info) {
@@ -49,6 +53,10 @@ class ListBox extends HTMLElement {
     while (this.list.firstChild) {
       this.list.removeChild(this.list.firstChild);
     }
+  }
+
+  set activationHandler (handlerFn) {
+    this.onActivated = handlerFn;
   }
 
   get options () {
@@ -81,7 +89,6 @@ class HeadingsBox extends ListBox {
 
     // Configure each list item with heading info
     infoArray.forEach(info => {
-      console.log(info);
       let option = this.createOption(info);
       let classNames = this.getClassNames(info);
 
@@ -106,7 +113,7 @@ class HeadingsBox extends ListBox {
     });
 
     // this.list has now been populated
-    this.listEvents = new ListEvents(this.list, () => {});
+    this.listEvents = new ListEvents(this.list, this.onActivated);
   }
 }
 

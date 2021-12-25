@@ -21,9 +21,9 @@
 */
 
 export class ListEvents {
-  constructor (domNode, notifyFn) {
+  constructor (domNode, onActivated) {
     this.container      = domNode;
-    this.notifyFn       = notifyFn;
+    this.onActivated    = onActivated;
 
     this.optionsList    = [];
     this.selectedOption = null;
@@ -141,10 +141,6 @@ export class ListEvents {
     option.setAttribute('aria-selected', 'true');
     this.container.setAttribute('aria-activedescendant', option.id);
     this.scrollSelectedOption();
-    this.notifyFn({
-      action: 'navigate',
-      index: this.optionsList.indexOf(this.selectedOption)
-    });
   }
 
   scrollSelectedOption () {
@@ -170,10 +166,7 @@ export class ListEvents {
   }
 
   activateSelection () {
-    this.notifyFn({
-      action: 'activate',
-      index: this.optionsList.indexOf(this.selectedOption)
-    });
+    this.onActivated(this.selectedOption);
   }
 
   selectFirstOption () {
