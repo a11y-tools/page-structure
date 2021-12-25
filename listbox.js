@@ -43,6 +43,11 @@ class ListBox extends HTMLElement {
     // Save reference to list container element
     this.list = this.shadowRoot.querySelector('[role="listbox"]');
 
+    // Provide default handler for option selection
+    this.onSelected = function (flag) {
+      console.log('selected: ', flag);
+    };
+
     // Provide default handler for option activation
     this.onActivated = function (option) {
       console.log('activated: ', option.getAttribute(dataAttribName));
@@ -61,6 +66,10 @@ class ListBox extends HTMLElement {
     while (this.list.firstChild) {
       this.list.removeChild(this.list.firstChild);
     }
+  }
+
+  set selectionHandler (handlerFn) {
+    this.onSelected = handlerFn;
   }
 
   set activationHandler (handlerFn) {
@@ -122,7 +131,8 @@ class HeadingsBox extends ListBox {
     });
 
     // this.list has now been populated
-    this.listEvents = new ListEvents(this.list, this.onActivated);
+    this.listEvents =
+      new ListEvents(this.list, this.onSelected, this.onActivated);
   }
 }
 

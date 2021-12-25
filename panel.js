@@ -10,6 +10,7 @@ import { saveOptions } from './storage.js';
 // var tabSet = document.querySelector('tab-set');
 // var tabEvents = new TabEvents(tabSet.tabs, tabSet.panels);
 var headingsBox = document.querySelector('headings-box');
+headingsBox.selectionHandler = enableButton;
 var contentPort;
 var myWindowId;
 
@@ -112,16 +113,16 @@ function onListBoxAction (data) {
 }
 
 /*
-*   updateButton
+*   enableButton
 */
-function updateButton (flag) {
+function enableButton (flag) {
   const button = document.getElementById('search-button');
 
   if (flag) {
-    button.setAttribute('disabled', true);
+    button.removeAttribute('disabled');
   }
   else {
-    button.removeAttribute('disabled');
+    button.setAttribute('disabled', true);
   }
 }
 
@@ -240,7 +241,7 @@ function updateSidebar (message) {
     // Update the headings listbox
     if (info.headings.filter(item => item.visible).length) {
       headingsBox.options = info.headings;
-      updateButton(true);
+      enableButton(false);
     }
     else {
       headingsBox.message = noHeadingElements;

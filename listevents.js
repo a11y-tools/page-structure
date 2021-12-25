@@ -21,8 +21,9 @@
 */
 
 export class ListEvents {
-  constructor (domNode, onActivated) {
+  constructor (domNode, onSelected, onActivated) {
     this.container      = domNode;
+    this.onSelected     = onSelected;
     this.onActivated    = onActivated;
 
     this.optionsList    = [];
@@ -55,7 +56,7 @@ export class ListEvents {
     // Handle events
     listBox.addEventListener('focus', this.handleFocus.bind(this));
     listBox.addEventListener('keydown', this.handleKeyDown.bind(this));
-    listBox.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    listBox.addEventListener('mouseup', this.handleMouseUp.bind(this));
     listBox.addEventListener('dblclick', this.handleDblClick.bind(this));
   }
 
@@ -120,7 +121,7 @@ export class ListEvents {
     }
   }
 
-  handleMouseDown (event) {
+  handleMouseUp (event) {
     let parentElement = event.target.parentElement;
 
     if (parentElement.getAttribute('role') === 'option') {
@@ -141,6 +142,7 @@ export class ListEvents {
     option.setAttribute('aria-selected', 'true');
     this.container.setAttribute('aria-activedescendant', option.id);
     this.scrollSelectedOption();
+    this.onSelected(true);
   }
 
   scrollSelectedOption () {
