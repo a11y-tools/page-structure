@@ -32,12 +32,12 @@ export class ListEvents {
     this.lastOption     = null;
     this.increment      = 6;
 
+    this.initOptionsList();
     this.assignEventHandlers();
-    this.init();
   }
 
-  init () {
-    // Configure each option and store it in optionsList array
+  initOptionsList () {
+    // Store listbox options in optionsList array
     const options = this.container.children;
 
     for (let i = 0; i < options.length; i++) {
