@@ -11,6 +11,7 @@ template.innerHTML = `
 `;
 
 const dataAttribName = 'data-ilps';
+const getMessage = browser.i18n.getMessage;
 
 function createLink (cssFile) {
   const link = document.createElement('link');
@@ -26,7 +27,17 @@ class ListBox extends HTMLElement {
   constructor () {
     super();
     this.attachShadow({ mode: 'open' });
+
+    // Append link elements for external CSS stylesheets
     this.shadowRoot.appendChild(createLink('listbox.css'));
+
+    switch (this.constructor.name) {
+      case 'HeadingsBox':
+        this.shadowRoot.appendChild(createLink('headings.css'));
+        break;
+    }
+
+    // Append template content as DOM nodes
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     // Save reference to list container element
@@ -71,9 +82,7 @@ class ListBox extends HTMLElement {
 class HeadingsBox extends ListBox {
   constructor () {
     super();
-    this.shadowRoot.appendChild(createLink('headings.css'));
-    this.emptyMessage = browser.i18n.getMessage("emptyContent");
-    this.listEvents = null;
+    this.emptyMessage = getMessage("emptyContent");
   }
 
   getClassNames (info) {
