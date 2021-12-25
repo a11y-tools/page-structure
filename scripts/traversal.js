@@ -2,7 +2,7 @@
 *   traversal.js
 */
 
-const dataAttribName = 'data-ilps';
+var dataAttribName = 'data-ilps';
 var counter = 0;
 
 function isCustom (element) {

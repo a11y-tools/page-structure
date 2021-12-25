@@ -26,16 +26,13 @@ class ListBox extends HTMLElement {
   constructor () {
     super();
     this.attachShadow({ mode: 'open' });
-
-    // Use external CSS stylesheet
     this.shadowRoot.appendChild(createLink('listbox.css'));
-
-    // Add template content DOM nodes
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    // Reference to list container element
+    // Save reference to list container element
     this.list = this.shadowRoot.querySelector('[role="listbox"]');
 
+    // Provide default handler for option activation
     this.onActivated = function (option) {
       console.log('activated: ', option.getAttribute(dataAttribName));
     };
@@ -59,8 +56,12 @@ class ListBox extends HTMLElement {
     this.onActivated = handlerFn;
   }
 
-  get options () {
-    return Array.from(this.list.children);
+  set message (msgText) {
+    this.clearOptions();
+    const div = document.createElement('div');
+    div.classList.add('grid-message');
+    div.textContent = msgText;
+    this.list.appendChild(div);
   }
 }
 
@@ -70,8 +71,8 @@ class ListBox extends HTMLElement {
 class HeadingsBox extends ListBox {
   constructor () {
     super();
-    // Use external CSS stylesheet
     this.shadowRoot.appendChild(createLink('headings.css'));
+    this.emptyMessage = browser.i18n.getMessage("emptyContent");
     this.listEvents = null;
   }
 
@@ -84,7 +85,6 @@ class HeadingsBox extends ListBox {
   }
 
   set options (infoArray) {
-    const emptyMessage = browser.i18n.getMessage("emptyContent");
     this.clearOptions();
 
     // Configure each list item with heading info
@@ -102,7 +102,7 @@ class HeadingsBox extends ListBox {
       // Check for empty heading content
       if (info.text.trim() === '') {
         textSpan.classList.add('empty');
-        textSpan.textContent = emptyMessage;
+        textSpan.textContent = this.emptyMessage;
       }
       else {
         textSpan.textContent = info.text;

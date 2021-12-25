@@ -36,8 +36,6 @@
 .h6-name { grid-column: 6; }
 .h6-text { grid-column: 7; }
 
-.grid-message { grid-column: 1 / span 7; }
-
 span.empty {
   color: #999;
 }

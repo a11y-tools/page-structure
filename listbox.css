@@ -35,3 +35,5 @@
   border: 1px solid #008ea4;
   padding: 2px;
 }
+
+.grid-message { grid-column: 1 / span 7; }

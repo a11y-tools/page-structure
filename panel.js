@@ -226,40 +226,10 @@ function getFormattedTitle (message) {
 }
 
 /*
-*   Format the heading info as HTML, with the appropriate class names for
-*   the grid layout.
-*/
-function getClassNames (name) {
-  switch (name) {
-    case 'H1': return ['h1-name', 'h1-text'];
-    case 'H2': return ['h2-name', 'h2-text'];
-    case 'H3': return ['h3-name', 'h3-text'];
-    case 'H4': return ['h4-name', 'h4-text'];
-    case 'H5': return ['h5-name', 'h5-text'];
-    case 'H6': return ['h6-name', 'h6-text'];
-  }
-}
-
-function getFormattedHeadings (infoList) {
-  let html = '';
-  for (let i = 0; i < infoList.length; i++) {
-    if (!(infoList[i].visible)) continue;
-    let name = infoList[i].name, text = infoList[i].text;
-    if (text.trim() === '') text = `<span class="empty">${emptyContent}</span>`;
-    const classNames = getClassNames(name);
-    html += `<div class="list-option"><div class="${classNames[0]}">${name}</div><div \
-    class="${classNames[1]}">${text}</div></div>`;
-  }
-  return html;
-}
-
-/*
 *   Display the structure information collected by the content script
 */
 function updateSidebar (message) {
   const pageTitle = document.getElementById('page-title-content');
-  // const headingsDiv = document.getElementById('listbox-1');
-  // headingsDiv.classList.add('listbox');
 
   if (typeof message === 'object') {
     const info = message.info;
@@ -267,21 +237,18 @@ function updateSidebar (message) {
     // Update the page-title box
     pageTitle.innerHTML = getFormattedTitle(message);
 
-    // Update the headings box
+    // Update the headings listbox
     if (info.headings.filter(item => item.visible).length) {
-      // headingsDiv.innerHTML = getFormattedHeadings(info.headings);
-      // listBox = new ListBox(headingsDiv, onListBoxAction);
       headingsBox.options = info.headings;
       updateButton(true);
     }
     else {
-      headingsDiv.innerHTML = `<div class="grid-message">${noHeadingElements}</div>`;
+      headingsBox.message = noHeadingElements;
     }
   }
   else {
     pageTitle.textContent = message;
     headingsBox.clearOptions();
-    // headingsDiv.textContent = '';
   }
 }
 
