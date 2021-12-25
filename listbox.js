@@ -2,11 +2,11 @@
 *   listbox.js
 */
 
+import { ListEvents } from './listevents.js';
+
 const template = document.createElement('template');
 template.innerHTML = `
-<div class="listbox-container">
-  <div role="listbox" tabindex="0">
-  </div>
+<div role="listbox" class="listbox" aria-activedescendant="" tabindex="0">
 </div>
 `;
 
@@ -64,6 +64,7 @@ class HeadingsBox extends ListBox {
     super();
     // Use external CSS stylesheet
     this.shadowRoot.appendChild(createLink('headings.css'));
+    this.listEvents = null;
   }
 
   getClassNames (info) {
@@ -103,6 +104,9 @@ class HeadingsBox extends ListBox {
 
       this.list.appendChild(option);
     });
+
+    // this.list has now been populated
+    this.listEvents = new ListEvents(this.list, () => {});
   }
 }
 

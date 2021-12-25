@@ -1,5 +1,5 @@
 /*
-*   ListBox: Class that encapsulates the state and behavior of a listbox
+*   ListEvents: Class that handles mouse and keyboard events of a listbox
 *   container with 'option' role elements. Provides keyboard support as
 *   recommended by ARIA Authoring Practices.
 *
@@ -20,7 +20,7 @@
 *      to reflect the listbox state.
 */
 
-export default class ListBox {
+export class ListEvents {
   constructor (domNode, notifyFn) {
     this.container      = domNode;
     this.notifyFn       = notifyFn;
@@ -31,63 +31,26 @@ export default class ListBox {
     this.lastOption     = null;
     this.increment      = 6;
 
-    this.validate();
+    this.assignEventHandlers();
     this.init();
   }
 
-  validate () {
-    let listBox = this.container;
-
-    function listBoxIsDomElement () {
-      let msg = "The ListBox is not a DOM Element";
-      if (!listBox instanceof Element) {
-        throw new TypeError(msg);
-      }
-    }
-
-    function listBoxHasChildElements () {
-      let msg = "The ListBox has no child elements.";
-      if (listBox.childElementCount === 0) {
-        throw new Error(msg)
-      }
-    }
-
-    listBoxIsDomElement();
-    listBoxHasChildElements();
-  }
-
   init () {
-    // Set ARIA attributes
-    this.container.setAttribute('role', 'listbox');
-    this.container.setAttribute('aria-activedescendant', '');
-
     // Configure each option and store it in optionsList array
-    let children = this.container.children;
+    const options = this.container.children;
 
-    for (let i = 0; i < children.length; i++) {
-      let option = children[i];
-      this.configure(option, i);
-      this.optionsList.push(option);
+    for (let i = 0; i < options.length; i++) {
+      this.optionsList.push(options[i]);
     }
 
     // Use optionsList to set firstOption and lastOption
-    let length = this.optionsList.length;
+    const length = this.optionsList.length;
     this.firstOption = this.optionsList[0];
     this.lastOption  = this.optionsList[length - 1];
-
-    this.assignEventHandlers();
-  }
-
-  configure (option, i) {
-    let prefix = 'opt-';
-
-    // Set ARIA role and id
-    option.setAttribute('role', 'option');
-    option.setAttribute('id', prefix + i);
   }
 
   assignEventHandlers () {
-    let listBox = this.container;
+    const listBox = this.container;
 
     // Handle events
     listBox.addEventListener('focus', this.handleFocus.bind(this));
@@ -103,9 +66,6 @@ export default class ListBox {
     else {
       this.setSelected(this.selectedOption);
     }
-
-    // event.stopPropagation();
-    // event.preventDefault();
   }
 
   handleKeyDown (event) {
@@ -165,17 +125,11 @@ export default class ListBox {
 
     if (parentElement.getAttribute('role') === 'option') {
       this.setSelected(parentElement);
-
-      // event.stopPropagation();
-      // event.preventDefault();
     }
   }
 
   handleDblClick (event) {
     this.activateSelection();
-
-    // event.stopPropagation();
-    // event.preventDefault();
   }
 
   setSelected (option) {
