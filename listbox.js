@@ -67,8 +67,8 @@ class ListBox extends HTMLElement {
     }
   }
 
-  get optionsArray () {
-    return Array.from(this.shadowRoot.querySelectorAll('[role="option"]'));
+  get optionsList () {
+    return this.shadowRoot.querySelectorAll('[role="option"]');
   }
 
   set selectedOption (option) {
@@ -141,7 +141,7 @@ class HeadingsBox extends ListBox {
       this.container.appendChild(option);
     });
 
-    // All option elements have now been added to the listbox container
+    // ListBox container is now fully populated with option elements
     this.listEvents = new ListEvents(this);
   }
 }
