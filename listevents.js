@@ -116,7 +116,7 @@ export class ListEvents {
 
   handleMouseUp (event) {
     let parentElement = event.target.parentElement;
-    if (parentElement.getAttribute('role') === 'option') {
+    if (parentElement && parentElement.getAttribute('role') === 'option') {
       this.setSelected(parentElement);
     }
   }
