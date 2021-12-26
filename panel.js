@@ -198,6 +198,7 @@ function updateSidebar (message) {
 
   if (typeof message === 'object') {
     const info = message.info;
+    removeHighlights();
 
     // Update the page-title box
     pageTitle.innerHTML = getFormattedTitle(message);
