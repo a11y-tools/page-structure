@@ -21,10 +21,11 @@
 */
 
 export class ListEvents {
-  constructor (domNode, onSelected, onActivated) {
-    this.container      = domNode;
-    this.onSelected     = onSelected;
-    this.onActivated    = onActivated;
+  constructor (listbox) {
+    this.listbox        = listbox;
+    this.container      = listbox.container;
+    this.onSelected     = listbox.onSelected;
+    this.onActivated    = listbox.onActivated;
 
     this.optionsList    = [];
     this.selectedOption = null;
@@ -38,26 +39,19 @@ export class ListEvents {
 
   initOptionsList () {
     // Store listbox options in optionsList array
-    const options = this.container.children;
+    this.optionsList = this.listbox.optionsArray;
 
-    for (let i = 0; i < options.length; i++) {
-      this.optionsList.push(options[i]);
-    }
-
-    // Use optionsList to set firstOption and lastOption
+    // Initialize firstOption and lastOption
     const length = this.optionsList.length;
     this.firstOption = this.optionsList[0];
     this.lastOption  = this.optionsList[length - 1];
   }
 
   assignEventHandlers () {
-    const listBox = this.container;
-
-    // Handle events
-    listBox.addEventListener('focus', this.handleFocus.bind(this));
-    listBox.addEventListener('keydown', this.handleKeyDown.bind(this));
-    listBox.addEventListener('mouseup', this.handleMouseUp.bind(this));
-    listBox.addEventListener('dblclick', this.handleDblClick.bind(this));
+    this.container.addEventListener('focus', this.handleFocus.bind(this));
+    this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
+    this.container.addEventListener('click', this.handleClick.bind(this));
+    this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
   }
 
   handleFocus (event) {
@@ -110,7 +104,7 @@ export class ListEvents {
       // Activation keys
       case 'Enter':
       case ' ':
-        this.activateSelection();
+        this.onActivated();
         flag = true;
         break;
     }
@@ -121,16 +115,20 @@ export class ListEvents {
     }
   }
 
-  handleMouseUp (event) {
-    let parentElement = event.target.parentElement;
+  handleClick (event) {
+    if (event.target.role === 'option') {
+      this.setSelected(event.target);
+      return;
+    }
 
-    if (parentElement.getAttribute('role') === 'option') {
+    let parentElement = event.target.parentElement;
+    if (parentElement.role === 'option') {
       this.setSelected(parentElement);
     }
   }
 
   handleDblClick (event) {
-    this.activateSelection();
+    this.onActivated();
   }
 
   setSelected (option) {
@@ -139,6 +137,7 @@ export class ListEvents {
     }
 
     this.selectedOption = option;
+    this.listbox.selectedOption = option;
     option.setAttribute('aria-selected', 'true');
     this.container.setAttribute('aria-activedescendant', option.id);
     this.scrollSelectedOption();
@@ -146,29 +145,25 @@ export class ListEvents {
   }
 
   scrollSelectedOption () {
-    let listbox = this.container;
+    let container = this.container;
     let element = this.selectedOption;
 
     // Note: element.offsetTop is the number of pixels from the top of the
     // closest relatively positioned parent element. Thus the CSS for the
     // ListBox container element must specify 'position: relative'.
 
-    if (listbox.scrollHeight > listbox.clientHeight) {
+    if (container.scrollHeight > container.clientHeight) {
 
       let elementBottom = element.offsetTop + element.offsetHeight;
-      let scrollBottom = listbox.clientHeight + listbox.scrollTop;
+      let scrollBottom = container.clientHeight + container.scrollTop;
 
       if (elementBottom > scrollBottom) {
-        listbox.scrollTop = elementBottom - listbox.clientHeight;
+        container.scrollTop = elementBottom - container.clientHeight;
       }
-      else if (element.offsetTop < listbox.scrollTop) {
-        listbox.scrollTop = element.offsetTop;
+      else if (element.offsetTop < container.scrollTop) {
+        container.scrollTop = element.offsetTop;
       }
     }
-  }
-
-  activateSelection () {
-    this.onActivated(this.selectedOption);
   }
 
   selectFirstOption () {
