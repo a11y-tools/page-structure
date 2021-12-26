@@ -20,7 +20,7 @@
 *      to reflect the listbox state.
 */
 
-export class ListEvents {
+export default class ListEvents {
   constructor (listbox) {
     this.listbox        = listbox;
     this.container      = listbox.container;

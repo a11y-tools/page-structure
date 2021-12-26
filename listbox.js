@@ -2,7 +2,7 @@
 *   listbox.js
 */
 
-import { ListEvents } from './listevents.js';
+import ListEvents from './listevents.js';
 
 const getMessage = browser.i18n.getMessage;
 
@@ -19,9 +19,10 @@ function createLink (cssFile) {
   return link;
 }
 
-/*
-*   ListBox
-*/
+//----------------------------------------------------------------
+//  ListBox
+//----------------------------------------------------------------
+
 class ListBox extends HTMLElement {
   constructor () {
     super();
@@ -89,9 +90,10 @@ class ListBox extends HTMLElement {
   }
 }
 
-/*
-*   HeadingsBox
-*/
+//----------------------------------------------------------------
+//  HeadingsBox
+//----------------------------------------------------------------
+
 class HeadingsBox extends ListBox {
   constructor () {
     super();
