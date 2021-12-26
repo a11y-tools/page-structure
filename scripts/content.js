@@ -1,10 +1,9 @@
 /*
 *   content.js
 */
-var headingRefs;
-var currentHeading;
+var currentHighlight;
 
-var highlightClass = 'structureExtensionHighlight';
+var highlightClass = 'ilps-highlight';
 var highlightProperties = `{
   position: absolute;
   overflow: hidden;
@@ -14,7 +13,7 @@ var highlightProperties = `{
   z-index: 10000;
 }`;
 
-var focusClass = 'structureExtensionFocus';
+var focusClass = 'ilps-focus';
 var focusProperties = `{
   outline: 3px dotted purple;
 }`;
@@ -34,53 +33,52 @@ function messageHandler (message) {
     case 'getInfo':
       getStructureInfo(panelPort);
       break;
+
+    case 'highlight':
+      highlightElement(message.dataId);
+      break;
+
+    case 'clear':
+      clearHighlights();
+      break;
   }
 }
 
-/*
-*   Add highlighting stylesheet to document.
-*/
+// Add highlighting stylesheet to document
 (function () {
   let sheet = document.createElement('style');
   sheet.innerHTML = `.${highlightClass} ${highlightProperties} .${focusClass}:focus ${focusProperties}`;
   document.body.appendChild(sheet);
 })();
 
-/*
-*   Respond to 'find' and 'clear' messages by highlighting and scrolling to
-*   the element specified or removing the highlighting
-*/
-browser.runtime.onMessage.addListener (
-  function (message, sender) {
-    switch (message.id) {
-      case 'find':
-        let element = headingRefs[message.index];
-        if (isInPage(element)) {
-          addHighlightBox(element);
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          currentHeading = element;
-          document.addEventListener('focus', focusListener);
-          document.addEventListener('blur', blurListener);
-        }
-        else {
-          console.log('Element was removed from DOM: ' + element)
-        }
-        break;
+function highlightElement (dataId) {
+  clearHighlights();
 
-      case 'clear':
-        removeOverlays();
-        document.removeEventListener('focus', focusListener);
-        document.removeEventListener('blur', blurListener);
-        break;
-    }
-});
+  const element = document.querySelector(`[${dataAttribName}="${dataId}"]`);
+  if (element && isInPage(element)) {
+    addHighlightBox(element);
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    currentHighlight = element;
+    document.addEventListener('focus', focusListener);
+    document.addEventListener('blur', blurListener);
+  }
+  else {
+    console.log(`Element was removed from DOM: ${dataId}`);
+  }
+}
+
+function clearHighlights () {
+  removeOverlays();
+  document.removeEventListener('focus', focusListener);
+  document.removeEventListener('blur', blurListener);
+}
 
 function focusListener (event) {
-  setFocus(currentHeading);
+  setFocus(currentHighlight);
 }
 
 function blurListener (event) {
-  addHighlightBox(currentHeading);
+  addHighlightBox(currentHighlight);
 }
 
 /*
@@ -136,7 +134,7 @@ function createOverlay (rect) {
 *   by previous calls to 'addHighlightBox'.
 */
 function removeOverlays () {
-  let selector = 'div.' + highlightClass;
+  let selector = `div.${highlightClass}`;
   let elements = document.querySelectorAll(selector);
   Array.prototype.forEach.call(elements, function (element) {
     document.body.removeChild(element);
