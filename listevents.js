@@ -38,7 +38,9 @@ export default class ListEvents {
   }
 
   initOptions () {
-    this.optionsList = Array.from(this.listbox.optionsList);
+    for (let option of this.listbox.optionsList) {
+      this.optionsList.push(option);
+    }
 
     // Initialize firstOption and lastOption
     const length = this.optionsList.length;
