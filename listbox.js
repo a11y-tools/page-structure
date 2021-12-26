@@ -42,15 +42,8 @@ class ListBox extends HTMLElement {
     // Save reference to list container element
     this.container = this.shadowRoot.querySelector('[role="listbox"]');
 
-    // Provide default handler for option selection
-    this.onSelected = function (flag) {
-      console.log('selected: ', flag);
-    };
-
-    // Provide default handler for option activation
-    this.onActivated = function (option) {
-      console.log('activated: ', option.id);
-    };
+    this.onSelected  = null;
+    this.onActivated = null;
   }
 
   createOption (info) {

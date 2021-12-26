@@ -107,7 +107,7 @@ export class ListEvents {
       // Activation keys
       case 'Enter':
       case ' ':
-        this.onActivated();
+        if (this.onActivated) this.onActivated();
         flag = true;
         break;
     }
@@ -126,7 +126,7 @@ export class ListEvents {
   }
 
   handleDblClick (event) {
-    this.onActivated();
+    if (this.onActivated) this.onActivated();
   }
 
   setSelected (option) {
@@ -139,7 +139,7 @@ export class ListEvents {
     option.setAttribute('aria-selected', 'true');
     this.container.setAttribute('aria-activedescendant', option.id);
     this.scrollSelectedOption();
-    this.onSelected(true);
+    if (this.onSelected) this.onSelected(true);
   }
 
   scrollSelectedOption () {
