@@ -4,14 +4,13 @@
 
 import { ListEvents } from './listevents.js';
 
+const getMessage = browser.i18n.getMessage;
+
 const template = document.createElement('template');
 template.innerHTML = `
 <div role="listbox" class="listbox" aria-activedescendant="" tabindex="0">
 </div>
 `;
-
-const dataAttribName = 'data-ilps';
-const getMessage = browser.i18n.getMessage;
 
 function createLink (cssFile) {
   const link = document.createElement('link');
@@ -41,7 +40,7 @@ class ListBox extends HTMLElement {
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     // Save reference to list container element
-    this.list = this.shadowRoot.querySelector('[role="listbox"]');
+    this.container = this.shadowRoot.querySelector('[role="listbox"]');
 
     // Provide default handler for option selection
     this.onSelected = function (flag) {
@@ -50,7 +49,7 @@ class ListBox extends HTMLElement {
 
     // Provide default handler for option activation
     this.onActivated = function (option) {
-      console.log('activated: ', option.getAttribute(dataAttribName));
+      console.log('activated: ', option.id);
     };
   }
 
@@ -58,14 +57,26 @@ class ListBox extends HTMLElement {
     const option = document.createElement('div');
     option.setAttribute('role', 'option');
     option.setAttribute('class', 'list-option');
-    option.setAttribute(dataAttribName, info.dataId);
+    option.setAttribute('id', info.dataId);
     return option;
   }
 
   clearOptions () {
-    while (this.list.firstChild) {
-      this.list.removeChild(this.list.firstChild);
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
     }
+  }
+
+  get optionsArray () {
+    return Array.from(this.shadowRoot.querySelectorAll('[role="option"]'));
+  }
+
+  set selectedOption (option) {
+    this.selected = option;
+  }
+
+  get selectedOption () {
+    return this.selected;
   }
 
   set selectionHandler (handlerFn) {
@@ -81,7 +92,7 @@ class ListBox extends HTMLElement {
     const div = document.createElement('div');
     div.classList.add('grid-message');
     div.textContent = msgText;
-    this.list.appendChild(div);
+    this.container.appendChild(div);
   }
 }
 
@@ -127,12 +138,11 @@ class HeadingsBox extends ListBox {
       }
       option.appendChild(textSpan);
 
-      this.list.appendChild(option);
+      this.container.appendChild(option);
     });
 
-    // this.list has now been populated
-    this.listEvents =
-      new ListEvents(this.list, this.onSelected, this.onActivated);
+    // All option elements have now been added to the listbox container
+    this.listEvents = new ListEvents(this);
   }
 }
 
