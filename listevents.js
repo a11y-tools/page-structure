@@ -33,13 +33,12 @@ export class ListEvents {
     this.lastOption     = null;
     this.increment      = 6;
 
-    this.initOptionsList();
+    this.initOptions();
     this.assignEventHandlers();
   }
 
-  initOptionsList () {
-    // Store listbox options in optionsList array
-    this.optionsList = this.listbox.optionsArray;
+  initOptions () {
+    this.optionsList = Array.from(this.listbox.optionsList);
 
     // Initialize firstOption and lastOption
     const length = this.optionsList.length;
@@ -50,7 +49,7 @@ export class ListEvents {
   assignEventHandlers () {
     this.container.addEventListener('focus', this.handleFocus.bind(this));
     this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.container.addEventListener('click', this.handleClick.bind(this));
+    this.container.addEventListener('mouseup', this.handleMouseUp.bind(this));
     this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
   }
 
@@ -115,14 +114,9 @@ export class ListEvents {
     }
   }
 
-  handleClick (event) {
-    if (event.target.role === 'option') {
-      this.setSelected(event.target);
-      return;
-    }
-
+  handleMouseUp (event) {
     let parentElement = event.target.parentElement;
-    if (parentElement.role === 'option') {
+    if (parentElement.getAttribute('role') === 'option') {
       this.setSelected(parentElement);
     }
   }
