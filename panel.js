@@ -11,6 +11,7 @@ import { saveOptions } from './storage.js';
 // var tabEvents = new TabEvents(tabSet.tabs, tabSet.panels);
 var headingsBox = document.querySelector('headings-box');
 headingsBox.selectionHandler = enableButton;
+headingsBox.activationHandler = addHighlight;
 var contentPort;
 var myWindowId;
 
@@ -88,28 +89,19 @@ function onError (error) {
 }
 
 //--------------------------------------------------------------
-//  Functions that handle ListBox selection and button actions
+//  Functions that handle ListBox activation and button actions
 //--------------------------------------------------------------
 
-/*
-*   onListBoxAction: Called from ListBox event handlers
-*/
-function onListBoxAction (data) {
-  if (data.index < 0) return;
+function addHighlight (event) {
+  const option = headingsBox.selectedOption;
+  contentPort.postMessage({
+    id: 'highlight',
+    dataId: option.id
+  });
+}
 
-  switch (data.action) {
-    case 'navigate':
-      logToConsole(`navigate: ${data.index}`);
-      updateButton(false);
-      break;
-    case 'activate':
-      logToConsole(`activate: ${data.index}`)
-      sendButtonActivationMessage({
-        id: 'find',
-        index: data.index
-      });
-      break;
-  }
+function removeHighlights () {
+  contentPort.postMessage({ id: 'clear' });
 }
 
 /*
@@ -127,38 +119,10 @@ function enableButton (flag) {
 }
 
 /*
-*   highlightSelectedOption
-*/
-function highlightSelectedOption (event) {
-  sendButtonActivationMessage({
-    id: 'find',
-    index: listBox.optionsList.indexOf(listBox.selectedOption)
-  });
-}
-
-/*
-*   removeHighlighting
-*/
-function removeHighlighting (event) {
-  sendButtonActivationMessage({
-    id: 'clear'
-  });
-}
-
-/*
-*   sendButtonActivationMessage
-*/
-function sendButtonActivationMessage (data) {
-  getActiveTabFor(myWindowId).then(tab => {
-    browser.tabs.sendMessage(tab.id, data);
-  });
-}
-
-/*
 *   Add listeners for the search and clear buttons.
 */
-document.getElementById('search-button').addEventListener('click', highlightSelectedOption);
-document.getElementById('clear-button').addEventListener('click', removeHighlighting);
+document.getElementById('search-button').addEventListener('click', addHighlight);
+document.getElementById('clear-button').addEventListener('click', removeHighlights);
 
 //-----------------------------------------------
 //  Functions that handle tab and window events
