@@ -49,7 +49,7 @@ export class ListEvents {
   assignEventHandlers () {
     this.container.addEventListener('focus', this.handleFocus.bind(this));
     this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.container.addEventListener('mouseup', this.handleMouseUp.bind(this));
+    this.container.addEventListener('click', this.handleClick.bind(this));
     this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
   }
 
@@ -64,6 +64,10 @@ export class ListEvents {
 
   handleKeyDown (event) {
     let flag = false;
+
+    if (event.ctrlKey || event.altKey || event.metaKey) {
+      return;
+    }
 
     switch (event.key) {
 
@@ -114,7 +118,7 @@ export class ListEvents {
     }
   }
 
-  handleMouseUp (event) {
+  handleClick (event) {
     let parentElement = event.target.parentElement;
     if (parentElement && parentElement.getAttribute('role') === 'option') {
       this.setSelected(parentElement);
