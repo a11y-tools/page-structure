@@ -32,6 +32,7 @@ export default class ListEvents {
     this.firstOption    = null;
     this.lastOption     = null;
     this.increment      = 6;
+    this.autoSelect     = true;
 
     this.initOptions();
     this.assignEventHandlers();
@@ -46,6 +47,9 @@ export default class ListEvents {
     const length = this.optionsList.length;
     this.firstOption = this.optionsList[0];
     this.lastOption  = this.optionsList[length - 1];
+
+    // Automatically set selection to firstOption
+    if (this.autoSelect && length) this.selectFirstOption();
   }
 
   assignEventHandlers () {
@@ -56,12 +60,7 @@ export default class ListEvents {
   }
 
   handleFocus (event) {
-    if (this.selectedOption === null) {
-      this.setSelected(this.firstOption);
-    }
-    else {
-      this.setSelected(this.selectedOption);
-    }
+    // Do nothing
   }
 
   handleKeyDown (event) {
