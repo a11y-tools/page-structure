@@ -2,6 +2,12 @@
 *   listbox.css
 */
 
+div {
+  --illini-orange:      #ff552e;
+  --light-blue:         #cad9ef;
+  --light-gray:            #eee;
+}
+
 .listbox {
   position: relative;
   height: 100%;
@@ -19,21 +25,21 @@
   display: grid;
   grid-template-columns: repeat(6, 1.33rem) 1fr;
   grid-column-gap: 2px;
+  padding: 5px;
+}
 
-  padding: 3px;
+.list-option:nth-child(odd) {
+  background-color: var(--light-gray);
 }
 
 .list-option:hover {
-  background: #eee;
-  border: 1px solid #999;
-  padding: 2px;
+  background: var(--light-blue);
 }
 
 .list-option[aria-selected='true'],
 .list-option[aria-selected='true']:hover {
-  background: #00feff;
-  border: 1px solid #008ea4;
-  padding: 2px;
+  outline: 2px solid var(--illini-orange);
+  outline-offset:  -2px;
 }
 
 .grid-message { grid-column: 1 / span 7; }

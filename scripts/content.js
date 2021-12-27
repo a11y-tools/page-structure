@@ -8,7 +8,7 @@ var highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
-  border: 3px solid cyan;
+  border: 3px solid #ff552e;
   pointer-events: none;
   z-index: 10000;
 }`;
