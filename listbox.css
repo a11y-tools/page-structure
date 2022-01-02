@@ -15,7 +15,7 @@ div {
 
   display: grid;
   grid-auto-rows: min-content;
-  grid-row-gap: 2px;
+  row-gap: 2px;
 
   border: 1px solid #ddd;
   padding: 5px;
@@ -24,7 +24,7 @@ div {
 .list-option {
   display: grid;
   grid-template-columns: repeat(6, 1.33rem) 1fr;
-  grid-column-gap: 2px;
+  column-gap: 2px;
   padding: 5px;
 }
 
