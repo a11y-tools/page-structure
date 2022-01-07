@@ -1,23 +1,5 @@
 /*
-*   ListEvents: Class that handles mouse and keyboard events of a listbox
-*   container with 'option' role elements. Provides keyboard support as
-*   recommended by ARIA Authoring Practices.
-*
-*   Desired behavior:
-*   1. Handle focus of the listbox container
-*   2. Handle up-arrow, down-arrow, left-arrow, right-arrow, home, end,
-*      page-up and page-down key presses to move selection among options.
-*   3. Handle mouse click for selecting an option.
-*   4. Handle return and space key presses to initiate the desired action
-*      associated with the selected option.
-*
-*   Functionality/methods:
-*   1. Initialize the DOM elements (the container and its children) with the
-*      proper ARIA roles.
-*   2. Create and assign necessary event handlers for the ListBox container.
-*   3. Maintain state information needed for the event handlers and set or
-*      remove ARIA attributes such as aria-activedescendant and aria-selected
-*      to reflect the listbox state.
+*   ListEvents: class that handles events for ListBox custom elements
 */
 
 export default class ListEvents {
@@ -34,11 +16,18 @@ export default class ListEvents {
     this.increment      = 6;
     this.autoSelect     = true;
 
-    this.initOptions();
     this.assignEventHandlers();
+    this.initOptions();
+  }
+
+  assignEventHandlers () {
+    this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
+    this.container.addEventListener('click', this.handleClick.bind(this));
+    this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
   }
 
   initOptions () {
+    // Populate this.optionsList
     for (let option of this.listbox.optionsList) {
       this.optionsList.push(option);
     }
@@ -50,12 +39,6 @@ export default class ListEvents {
 
     // Automatically set selection to firstOption
     if (this.autoSelect && length) this.selectFirstOption();
-  }
-
-  assignEventHandlers () {
-    this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.container.addEventListener('click', this.handleClick.bind(this));
-    this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
   }
 
   handleKeyDown (event) {
