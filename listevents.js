@@ -53,14 +53,9 @@ export default class ListEvents {
   }
 
   assignEventHandlers () {
-    this.container.addEventListener('focus', this.handleFocus.bind(this));
     this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.container.addEventListener('click', this.handleClick.bind(this));
     this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
-  }
-
-  handleFocus (event) {
-    // Do nothing
   }
 
   handleKeyDown (event) {

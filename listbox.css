@@ -16,9 +16,6 @@ div {
   display: grid;
   grid-auto-rows: min-content;
   row-gap: 2px;
-
-  border: 1px solid #ddd;
-  padding: 5px;
 }
 
 .list-option {
@@ -28,7 +25,7 @@ div {
   padding: 5px;
 }
 
-.list-option:nth-child(odd) {
+.list-option:nth-child(even) {
   background-color: var(--light-gray);
 }
 
