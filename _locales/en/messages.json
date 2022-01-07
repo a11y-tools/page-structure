@@ -14,6 +14,11 @@
     "description": "Label for page title"
   },
 
+  "landmarksLabel": {
+    "message": "Landmarks",
+    "description": "Label for list of landmarks"
+  },
+
   "headingsLabel": {
     "message": "Headings",
     "description": "Label for list of headings"
