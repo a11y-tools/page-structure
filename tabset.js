@@ -61,12 +61,12 @@ export default class TabSet extends HTMLElement {
     for (let tab of this.tabs) {
       if (tab.id === id) {
         this.showPanel(tab.getAttribute('aria-controls'));
-        tab.setAttribute('aria-selected', true);
+        tab.setAttribute('aria-selected', 'true');
         tab.setAttribute('tabindex', '0');
         tab.focus();
       }
       else {
-        tab.setAttribute('aria-selected', false);
+        tab.setAttribute('aria-selected', 'false');
         tab.setAttribute('tabindex', '-1');
       }
     }
@@ -86,6 +86,8 @@ export default class TabSet extends HTMLElement {
   connectedCallback () {
     this.selectTab('tab-1');
   }
+
+  // Event handlers
 
   clickHandler (event) {
     let tab = event.currentTarget;
