@@ -8,6 +8,7 @@ export default class ListEvents {
     this.container      = listbox.container;
     this.onSelected     = listbox.onSelected;
     this.onActivated    = listbox.onActivated;
+    this.onClearHL      = listbox.onClearHL;
 
     this.optionsList    = [];
     this.selectedOption = null;
@@ -21,9 +22,12 @@ export default class ListEvents {
   }
 
   assignEventHandlers () {
+    this.container.addEventListener('focus', this.handleFocus.bind(this));
     this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.container.addEventListener('click', this.handleClick.bind(this));
     this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
+    this.listbox.highlightButton.addEventListener('click', this.onActivated);
+    this.listbox.clearHLButton.addEventListener('click', this.onClearHL);
   }
 
   initOptions () {
@@ -38,7 +42,15 @@ export default class ListEvents {
     this.lastOption  = this.optionsList[length - 1];
 
     // Automatically set selection to firstOption
-    if (this.autoSelect && length) this.selectFirstOption();
+    if (this.autoSelect && length) {
+      this.selectFirstOption();
+    }
+  }
+
+  handleFocus (event) {
+    if (this.selectedOption && this.onSelected) {
+      this.onSelected(true);
+    }
   }
 
   handleKeyDown (event) {

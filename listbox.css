@@ -8,7 +8,7 @@ div {
   --light-gray:            #eee;
 }
 
-.listbox {
+[role='listbox'] {
   position: relative;
   height: 100%;
   overflow-y: auto;
@@ -18,25 +18,54 @@ div {
   row-gap: 2px;
 }
 
-.list-option {
+[role='option'] {
   display: grid;
   grid-template-columns: repeat(6, 1.33rem) 1fr;
   column-gap: 2px;
   padding: 5px;
 }
 
-.list-option:nth-child(even) {
+[role='option']:nth-child(even) {
   background-color: var(--light-gray);
 }
 
-.list-option:hover {
+[role='option']:hover {
   background: var(--light-blue);
 }
 
-.list-option[aria-selected='true'],
-.list-option[aria-selected='true']:hover {
+[role='option'][aria-selected='true'],
+[role='option'][aria-selected='true']:hover {
   outline: 2px solid var(--illini-orange);
   outline-offset:  -2px;
 }
 
 .grid-message { grid-column: 1 / span 7; }
+
+.buttons-box {
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: row wrap;
+  margin-top: 1.25rem;
+}
+
+button {
+  font-size: 0.9125rem;
+  border: 0;
+  border-radius: 4px;
+  padding: 6px 8px;
+  background-color: var(--light-gray);
+}
+
+button:hover {
+  background: rgba(12, 12, 13, 0.2);
+}
+
+button:active {
+  background: rgba(12, 12, 13, 0.3);
+}
+
+button:focus {
+  box-shadow: 0 0 0 1px #0a84ff inset,
+              0 0 0 1px #0a84ff,
+              0 0 0 4px rgba(10, 132, 255, 0.3);
+}

@@ -8,7 +8,11 @@ const getMessage = browser.i18n.getMessage;
 
 const template = document.createElement('template');
 template.innerHTML = `
-<div role="listbox" class="listbox" aria-activedescendant="" tabindex="0">
+<div role="listbox" aria-activedescendant="" tabindex="0">
+</div>
+<div class="buttons-box">
+  <button id="highlight" disabled></button>
+  <button id="clearHL"></button>
 </div>
 `;
 
@@ -40,17 +44,26 @@ class ListBox extends HTMLElement {
     // Append template content as DOM nodes
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    // Save reference to list container element
+    // Save references to list container element and buttons
     this.container = this.shadowRoot.querySelector('[role="listbox"]');
+    this.highlightButton = this.shadowRoot.querySelector('#highlight');
+    this.clearHLButton = this.shadowRoot.querySelector('#clearHL');
 
+    // Init. handler function references and button labels
     this.onSelected  = null;
     this.onActivated = null;
+    this.onClearHL   = null;
+    this.initButtons();
+  }
+
+  initButtons () {
+    this.highlightButton.textContent = getMessage('highlightButtonLabel');
+    this.clearHLButton.textContent = getMessage('clearHLButtonLabel');
   }
 
   createOption (info) {
     const option = document.createElement('div');
     option.setAttribute('role', 'option');
-    option.setAttribute('class', 'list-option');
     option.setAttribute('id', info.dataId);
     return option;
   }
@@ -79,6 +92,10 @@ class ListBox extends HTMLElement {
 
   set activationHandler (handlerFn) {
     this.onActivated = handlerFn;
+  }
+
+  set clearHLHandler (handlerFn) {
+    this.onClearHL = handlerFn;
   }
 
   set message (msgText) {
