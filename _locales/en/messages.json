@@ -24,14 +24,14 @@
     "description": "Label for list of headings"
   },
 
-  "searchButtonLabel": {
+  "highlightButtonLabel": {
     "message": "Highlight Selected",
-    "description": "Label for search-button"
+    "description": "Label for highlight button"
   },
 
-  "clearButtonLabel": {
+  "clearHLButtonLabel": {
     "message": "Clear Highlighting",
-    "description": "Label for clear-button"
+    "description": "Label for clearHL button"
   },
 
   "helpLabel": {
