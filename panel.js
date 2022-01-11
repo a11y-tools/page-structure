@@ -3,15 +3,14 @@
 */
 
 import TabSet from './tabset.js';
-// import TabEvents from './tabevents.js';
 import { HeadingsBox } from './listbox.js';
 import { saveOptions } from './storage.js';
 
-// var tabSet = document.querySelector('tab-set');
-// var tabEvents = new TabEvents(tabSet.tabs, tabSet.panels);
 var headingsBox = document.querySelector('headings-box');
 headingsBox.selectionHandler = enableButton;
 headingsBox.activationHandler = addHighlight;
+headingsBox.clearHLHandler = removeHighlights;
+
 var contentPort;
 var myWindowId;
 
@@ -29,20 +28,11 @@ const tabIsLoading         = getMessage("tabIsLoading");
 const protocolNotSupported = getMessage("protocolNotSupported");
 
 function addLabelsAndHelpContent () {
-  // page-title-label and headings-label
+  // page-title-label
   document.getElementById('page-title-label').textContent =
     getMessage("pageTitleLabel");
-  /*
-  document.getElementById('headings-label').textContent =
-    getMessage("headingsLabel");
-  */
 
-  // button labels
-  document.getElementById('search-button').textContent =
-    getMessage("searchButtonLabel");
-  document.getElementById('clear-button').textContent =
-    getMessage("clearButtonLabel");
-
+/*
   // help-label, help-highlight, help-active and help-focus content
   document.getElementById('help-label').textContent =
     getMessage("helpLabel");
@@ -52,6 +42,7 @@ function addLabelsAndHelpContent () {
     getMessage("helpActivate");
   document.getElementById('help-focus').textContent =
     getMessage("helpFocus");
+*/
 }
 
 /*
@@ -91,7 +82,7 @@ function onError (error) {
 }
 
 //--------------------------------------------------------------
-//  Functions that handle ListBox activation and button actions
+//  HeadingsBox handler functions
 //--------------------------------------------------------------
 
 function addHighlight (event) {
@@ -110,7 +101,7 @@ function removeHighlights () {
 *   enableButton
 */
 function enableButton (flag) {
-  const button = document.getElementById('search-button');
+  const button = headingsBox.highlightButton;
 
   if (flag) {
     button.removeAttribute('disabled');
@@ -119,12 +110,6 @@ function enableButton (flag) {
     button.setAttribute('disabled', true);
   }
 }
-
-/*
-*   Add listeners for the search and clear buttons.
-*/
-document.getElementById('search-button').addEventListener('click', addHighlight);
-document.getElementById('clear-button').addEventListener('click', removeHighlights);
 
 //-----------------------------------------------
 //  Functions that handle tab and window events

@@ -55,34 +55,3 @@ body > details ul {
 body > details li:not(:first-child) {
   margin-top: 0.66em;
 }
-
-.buttons-container {
-  margin-top: 1rem;
-}
-
-button.search {
-  font-size: 12px;
-  border: 0;
-  border-radius: 2px;
-  padding: 4px 8px;
-  margin-top: 15px;
-  background: rgba(12, 12, 13, 0.1);
-}
-
-button.search:hover {
-  background: rgba(12, 12, 13, 0.2);
-}
-
-button.search:active {
-  background: rgba(12, 12, 13, 0.3);
-}
-
-button.search:focus {
-  box-shadow: 0 0 0 1px #0a84ff inset,
-              0 0 0 1px #0a84ff,
-              0 0 0 4px rgba(10, 132, 255, 0.3);
-}
-
-button.search:last-child {
-  margin-left: 8px;
-}
