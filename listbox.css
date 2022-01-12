@@ -39,7 +39,11 @@ div {
   outline-offset:  -2px;
 }
 
-.grid-message { grid-column: 1 / span 7; }
+.grid-message {
+  grid-column: 1 / span 7;
+  font-weight: bold;
+  padding: 1rem calc(4px + 0.25rem);
+}
 
 .buttons-box {
   display: flex;
