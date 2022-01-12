@@ -1,0 +1,9 @@
+/* landmarks.css */
+
+.role {
+  text-transform: capitalize;
+}
+
+.name::before {
+  content: ': ';
+}
