@@ -1,6 +1,10 @@
-/*
-*   headings.css
-*/
+/* headings.css */
+
+[role='option'] {
+  display: grid;
+  grid-template-columns: repeat(6, 1.33rem) 1fr;
+  column-gap: 2px;
+}
 
 .h1-name, .h2-name, .h3-name, .h4-name, .h5-name, .h6-name {
   color: #999;
