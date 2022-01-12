@@ -24,15 +24,15 @@ export default class ListEvents {
   assignEventHandlers () {
     this.container.addEventListener('focus', this.handleFocus.bind(this));
     this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.container.addEventListener('click', this.handleClick.bind(this));
-    this.container.addEventListener('dblclick', this.handleDblClick.bind(this));
     this.listbox.highlightButton.addEventListener('click', this.onActivated);
     this.listbox.clearHLButton.addEventListener('click', this.onClearHL);
   }
 
   initOptions () {
-    // Populate this.optionsList
+    // Add event listeners; populate this.optionsList array
     for (let option of this.listbox.optionsList) {
+      option.addEventListener('click', this.handleClick.bind(this));
+      option.addEventListener('dblclick', this.handleDblClick.bind(this));
       this.optionsList.push(option);
     }
 
@@ -110,10 +110,7 @@ export default class ListEvents {
   }
 
   handleClick (event) {
-    let parentElement = event.target.parentElement;
-    if (parentElement && parentElement.getAttribute('role') === 'option') {
-      this.setSelected(parentElement);
-    }
+    this.setSelected(event.currentTarget);
   }
 
   handleDblClick (event) {
