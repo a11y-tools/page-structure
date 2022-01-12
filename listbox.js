@@ -39,6 +39,9 @@ class ListBox extends HTMLElement {
       case 'HeadingsBox':
         this.shadowRoot.appendChild(createLink('headings.css'));
         break;
+      case 'LandmarksBox':
+        this.shadowRoot.appendChild(createLink('landmarks.css'));
+        break;
     }
 
     // Append template content as DOM nodes
@@ -128,7 +131,7 @@ class HeadingsBox extends ListBox {
   set options (infoArray) {
     this.clearOptions();
 
-    // Configure each list item with heading info
+    // Configure each list option with heading info
     infoArray.forEach(info => {
       let option = this.createOption(info);
       let classNames = this.getClassNames(info);
@@ -158,5 +161,59 @@ class HeadingsBox extends ListBox {
   }
 }
 
+//----------------------------------------------------------------
+//  LandmarksBox
+//----------------------------------------------------------------
+
+class LandmarksBox extends ListBox {
+  constructor () {
+    super();
+  }
+
+  set options (infoNode) {
+    // Create references for use within nested function with its own 'this'
+    let container = this.container,
+      createOption = this.createOption;
+
+    this.clearOptions();
+
+    // Configure each list option with landmark info: The infoNode param. is
+    // a tree object with 'value' and 'descendants' properties. The root node
+    // has 'value' of 'root' so only its 'descendants' are of interest.
+
+    function traverseLandmarks (treeNode, level) {
+      for (let node of treeNode.descendants) {
+        console.log(`level: ${level}`);
+        let info = node.value;
+        let option = createOption(info);
+
+        let roleSpan = document.createElement('span');
+        let prefix = '\xa0\xa0\xa0'; //'\u2014\xa0';
+
+        roleSpan.classList.add('role');
+        roleSpan.textContent = prefix.repeat(level) + info.role;
+        option.appendChild(roleSpan);
+
+        if (info.name.length) {
+          let nameSpan = document.createElement('span');
+          nameSpan.classList.add('name');
+          nameSpan.textContent = info.name;
+          option.appendChild(nameSpan);
+        }
+
+        container.appendChild(option);
+        traverseLandmarks(node, level + 1);
+      }
+    }
+
+    // Use recursive function for landmarks tree structure
+    traverseLandmarks(infoNode, 0);
+
+    // ListBox container is now fully populated with option elements
+    this.listEvents = new ListEvents(this);
+  }
+}
+
 customElements.define('headings-box', HeadingsBox);
-export { HeadingsBox };
+customElements.define('landmarks-box', LandmarksBox);
+export { HeadingsBox, LandmarksBox };

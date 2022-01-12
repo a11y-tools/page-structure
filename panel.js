@@ -4,12 +4,18 @@
 
 import TabSet from './tabset.js';
 import { HeadingsBox } from './listbox.js';
+import { LandmarksBox } from './listbox.js';
 import { saveOptions } from './storage.js';
 
 var headingsBox = document.querySelector('headings-box');
 headingsBox.selectionHandler = enableButton;
 headingsBox.activationHandler = addHighlight;
 headingsBox.clearHLHandler = removeHighlights;
+
+var landmarksBox = document.querySelector('landmarks-box');
+landmarksBox.selectionHandler = enableButton;
+landmarksBox.activationHandler = addHighlight;
+landmarksBox.clearHLHandler = removeHighlights;
 
 var contentPort;
 var myWindowId;
@@ -190,18 +196,29 @@ function updateSidebar (message) {
     // Update the page-title box
     pageTitle.innerHTML = getFormattedTitle(message);
 
+    // TODO: Move the checking for visible and/or empty list to
+    // respective custom elements: HeadingsBox and LandmarksBox
+
     // Update the headings listbox
     if (info.headings.filter(item => item.visible).length) {
       headingsBox.options = info.headings;
-      enableButton(false);
     }
     else {
       headingsBox.message = noHeadingElements;
+    }
+
+    // Update the landmarks listbox
+    if (info.landmarks.descendants.length) {
+      landmarksBox.options = info.landmarks;
+    }
+    else {
+      landmarksBox.message = noLandmarkElements;
     }
   }
   else {
     pageTitle.textContent = message;
     headingsBox.clearOptions();
+    landmarksBox.clearOptions();
   }
 }
 
