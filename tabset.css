@@ -1,6 +1,7 @@
 /* tabset.css */
 
 div {
+  --larger: 1.0625rem;
   --light-gray: #eee;
 }
 
@@ -15,6 +16,8 @@ div {
   position: relative;
   top: 1px;
   background-color: var(--light-gray);
+  font-size: var(--larger);
+  font-weight: bold;
 
   margin: 0;
   padding: 2px 0.25rem;
@@ -24,16 +27,22 @@ div {
   border-radius: 5px 5px 0 0;
 }
 
-[role="tablist"] [role="tab"] span {
-  display: inline-block;
-  margin: 2px;
-  padding: 4px;
-}
-
 [role="tablist"] [role="tab"][aria-selected="true"] {
   border-bottom: 1px white solid;
   background-color: white;
   z-index: 10;
+}
+
+[role="tablist"] [role="tab"] span {
+  display: inline-block;
+  margin: 1px;
+  padding: 4px;
+}
+
+[role="tablist"] [role="tab"]:focus span,
+[role="tablist"] [role="tab"]:hover span {
+  padding: 2px;
+  border: 2px solid currentColor;
 }
 
 [role="tabpanel"] {
@@ -45,10 +54,4 @@ div {
 [role="tabpanel"].show {
   display:  block;
   height: 440px;
-}
-
-[role="tablist"] [role="tab"]:focus span,
-[role="tablist"] [role="tab"]:hover span {
-  padding: 2px;
-  border: 2px solid currentColor;
 }

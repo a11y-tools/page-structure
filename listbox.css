@@ -6,6 +6,7 @@ div {
   --illini-orange:      #ff552e;
   --light-blue:         #cad9ef;
   --light-gray:            #eee;
+  --smaller:          0.9375rem;
 }
 
 [role='listbox'] {
@@ -52,7 +53,7 @@ div {
 }
 
 button {
-  font-size: 0.9125rem;
+  font-size: var(--smaller);
   border: 0;
   border-radius: 4px;
   padding: 6px 8px;

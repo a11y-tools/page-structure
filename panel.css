@@ -3,7 +3,7 @@
 */
 
 html {
-  --larger: 115%;
+  --larger: 1.0625rem;
 }
 
 html, body {
@@ -20,7 +20,7 @@ body > h2 {
 }
 
 tab-set {
-  margin-top:  1rem;
+  margin-top:  0.5rem;
 }
 
 .content {
