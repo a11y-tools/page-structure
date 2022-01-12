@@ -44,7 +44,7 @@ div {
 
 [role="tabpanel"].show {
   display:  block;
-  height: 480px;
+  height: 440px;
 }
 
 [role="tablist"] [role="tab"]:focus span,
