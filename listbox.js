@@ -170,44 +170,49 @@ class LandmarksBox extends ListBox {
     super();
   }
 
-  set options (infoNode) {
-    // Create references for use within nested function with its own 'this'
-    let container = this.container,
-      createOption = this.createOption;
+  /*
+  *   traverseLandmarks: Recursive method for traversing the landmarks tree
+  *   data structure. The 'value' property of the landmarks root node is just
+  *   a placeholder, so only its 'descendants' are of interest.
+  *   @param treeNode: initial value is the root node of landmarks tree
+  *   @param level: initial value should be 0 (integer)
+  */
+  traverseLandmarks (treeNode, level) {
+    let prefix = '\u2014\xa0';
 
+    for (let node of treeNode.descendants) {
+      // Configure each list option with landmark info
+      let info = node.value;
+      let option = this.createOption(info);
+
+      let roleSpan = document.createElement('span');
+      roleSpan.classList.add('role');
+      roleSpan.textContent = prefix.repeat(level) + info.role;
+      option.appendChild(roleSpan);
+
+      if (info.name.length) {
+        let nameSpan = document.createElement('span');
+        nameSpan.classList.add('name');
+        nameSpan.textContent = info.name;
+        option.appendChild(nameSpan);
+      }
+
+      this.container.appendChild(option);
+      this.traverseLandmarks(node, level + 1);
+    }
+  }
+
+  /*
+  *   options: infoNode is the root of the landmarks tree structure. It has
+  *   properties 'value' and 'descendants', and each item in its 'descendants'
+  *   array has that identical type (same properties). The 'value' property
+  *   of each 'descendants' item is a landmarksInfo object.
+  */
+  set options (infoNode) {
     this.clearOptions();
 
-    // Configure each list option with landmark info: The infoNode param. is
-    // a tree object with 'value' and 'descendants' properties. The root node
-    // has 'value' of 'root' so only its 'descendants' are of interest.
-
-    function traverseLandmarks (treeNode, level) {
-      for (let node of treeNode.descendants) {
-        console.log(`level: ${level}`);
-        let info = node.value;
-        let option = createOption(info);
-
-        let roleSpan = document.createElement('span');
-        let prefix = '\xa0\xa0\xa0'; //'\u2014\xa0';
-
-        roleSpan.classList.add('role');
-        roleSpan.textContent = prefix.repeat(level) + info.role;
-        option.appendChild(roleSpan);
-
-        if (info.name.length) {
-          let nameSpan = document.createElement('span');
-          nameSpan.classList.add('name');
-          nameSpan.textContent = info.name;
-          option.appendChild(nameSpan);
-        }
-
-        container.appendChild(option);
-        traverseLandmarks(node, level + 1);
-      }
-    }
-
-    // Use recursive function for landmarks tree structure
-    traverseLandmarks(infoNode, 0);
+    // Use recursive method for harvesting data in landmarks tree structure
+    this.traverseLandmarks(infoNode, 0);
 
     // ListBox container is now fully populated with option elements
     this.listEvents = new ListEvents(this);
