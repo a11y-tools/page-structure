@@ -14,14 +14,14 @@
     "description": "Label for page title"
   },
 
-  "landmarksLabel": {
-    "message": "Landmarks",
-    "description": "Label for list of landmarks"
-  },
-
   "headingsLabel": {
     "message": "Headings",
     "description": "Label for list of headings"
+  },
+
+  "landmarksLabel": {
+    "message": "Landmarks",
+    "description": "Label for list of landmarks"
   },
 
   "highlightButtonLabel": {
@@ -62,6 +62,11 @@
   "noHeadingElements": {
     "message": "No HTML heading elements found!",
     "description": "Message indicating that no heading elements were found in the document."
+  },
+
+  "noLandmarkElements": {
+    "message": "No HTML landmark elements found!",
+    "description": "Message indicating that no landmark elements were found in the document."
   },
 
   "tabIsLoading": {
