@@ -2,6 +2,7 @@
 *   panel.js
 */
 
+import TabSet from './tabset.js';
 import { HeadingsBox } from './listbox.js';
 import { LandmarksBox } from './listbox.js';
 import { saveOptions } from './storage.js';
