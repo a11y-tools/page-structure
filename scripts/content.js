@@ -52,12 +52,14 @@ function messageHandler (message) {
 })();
 
 function highlightElement (dataId) {
+  const prefix = dataId.substring(0, 2);
+  const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
 
   const element = document.querySelector(`[${dataAttribName}="${dataId}"]`);
   if (element && isInPage(element)) {
-    addHighlightBox(element);
-    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    addHighlightBox(element, prefix);
+    element.scrollIntoView({ behavior: 'smooth', block: blockVal });
     currentHighlight = element;
     document.addEventListener('focus', focusListener);
     document.addEventListener('blur', blurListener);
@@ -100,11 +102,12 @@ function setFocus (element) {
 *   addHighlightBox: Clear previous highlighting and add highlight border box
 *   to specified element.
 */
-function addHighlightBox (element) {
+function addHighlightBox (element, prefix) {
   let boundingRect = element.getBoundingClientRect();
+  let offset = prefix === 'h-' ? 4 : 0;
   removeOverlays();
 
-  let overlayNode = createOverlay(boundingRect);
+  let overlayNode = createOverlay(boundingRect, offset);
   document.body.appendChild(overlayNode);
 }
 
@@ -112,19 +115,19 @@ function addHighlightBox (element) {
 *   createOverlay: Use bounding client rectangle and offsets to create an element
 *   that appears as a highlighted border around element corresponding to 'rect'.
 */
-function createOverlay (rect) {
+function createOverlay (rect, offset) {
+  console.log(`offset: ${offset}`);
   const MIN_WIDTH = 68;
   const MIN_HEIGHT = 27;
-  const OFFSET = 5;
 
   let node = document.createElement('div');
   node.setAttribute('class', highlightClass);
 
-  node.style.left   = Math.round(rect.left - OFFSET + window.scrollX) + 'px';
-  node.style.top    = Math.round(rect.top  - OFFSET + window.scrollY) + 'px';
+  node.style.left   = Math.round(rect.left - offset * 2 + window.scrollX) + 'px';
+  node.style.top    = Math.round(rect.top  - offset + window.scrollY) + 'px';
 
-  node.style.width  = Math.max(rect.width  + OFFSET * 2, MIN_WIDTH)  + 'px';
-  node.style.height = Math.max(rect.height + OFFSET * 2, MIN_HEIGHT) + 'px';
+  node.style.width  = Math.max(rect.width  + offset * 4, MIN_WIDTH)  + 'px';
+  node.style.height = Math.max(rect.height + offset * 2, MIN_HEIGHT) + 'px';
 
   return node;
 }
