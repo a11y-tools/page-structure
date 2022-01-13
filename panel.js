@@ -2,7 +2,6 @@
 *   panel.js
 */
 
-import TabSet from './tabset.js';
 import { HeadingsBox } from './listbox.js';
 import { LandmarksBox } from './listbox.js';
 import { saveOptions } from './storage.js';
@@ -30,6 +29,7 @@ function logToConsole (...args) {
 // Get message strings from locale-specific messages.json file
 const getMessage = browser.i18n.getMessage;
 const noHeadingElements    = getMessage("noHeadingElements");
+const noLandmarkElements   = getMessage("noLandmarkElements");
 const tabIsLoading         = getMessage("tabIsLoading");
 const protocolNotSupported = getMessage("protocolNotSupported");
 
