@@ -8,13 +8,13 @@ import { LandmarksBox } from './listbox.js';
 import { saveOptions } from './storage.js';
 
 var headingsBox = document.querySelector('headings-box');
-headingsBox.selectionHandler = enableButton;
-headingsBox.activationHandler = addHighlight;
+headingsBox.selectionHandler = enableHeadingsButton;
+headingsBox.activationHandler = highlightHeadingElement;
 headingsBox.clearHLHandler = removeHighlights;
 
 var landmarksBox = document.querySelector('landmarks-box');
-landmarksBox.selectionHandler = enableButton;
-landmarksBox.activationHandler = addHighlight;
+landmarksBox.selectionHandler = enableLandmarksButton;
+landmarksBox.activationHandler = highlightLandmarkElement;
 landmarksBox.clearHLHandler = removeHighlights;
 
 var contentPort;
@@ -88,11 +88,19 @@ function onError (error) {
 }
 
 //--------------------------------------------------------------
-//  HeadingsBox handler functions
+//  HeadingsBox and LandmarksBox handler functions
 //--------------------------------------------------------------
 
-function addHighlight (event) {
+function highlightHeadingElement (event) {
   const option = headingsBox.selectedOption;
+  contentPort.postMessage({
+    id: 'highlight',
+    dataId: option.id
+  });
+}
+
+function highlightLandmarkElement (event) {
+  const option = landmarksBox.selectedOption;
   contentPort.postMessage({
     id: 'highlight',
     dataId: option.id
@@ -103,18 +111,22 @@ function removeHighlights () {
   contentPort.postMessage({ id: 'clear' });
 }
 
-/*
-*   enableButton
-*/
-function enableButton (flag) {
+function enableHeadingsButton (flag) {
   const button = headingsBox.highlightButton;
 
-  if (flag) {
+  if (flag)
     button.removeAttribute('disabled');
-  }
-  else {
+  else
     button.setAttribute('disabled', true);
-  }
+}
+
+function enableLandmarksButton (flag) {
+  const button = landmarksBox.highlightButton;
+
+  if (flag)
+    button.removeAttribute('disabled');
+  else
+    button.setAttribute('disabled', true);
 }
 
 //-----------------------------------------------
