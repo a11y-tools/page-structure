@@ -253,6 +253,7 @@ function runContentScripts (callerFn) {
     if (tab.url.indexOf('http:') === 0 || tab.url.indexOf('https:') === 0) {
       browser.tabs.executeScript(tab.id, { file: 'scripts/utils.js' });
       browser.tabs.executeScript(tab.id, { file: 'scripts/traversal.js' });
+      browser.tabs.executeScript(tab.id, { file: 'scripts/collectData.js' });
       browser.tabs.executeScript(tab.id, { file: 'scripts/content.js' });
     }
     else {
