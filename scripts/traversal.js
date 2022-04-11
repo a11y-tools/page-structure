@@ -22,7 +22,7 @@ function isSkippable (element) {
 
 /*
 *   getChildren: Return an array of HTMLElement children based on criteria
-*   related to whether @param element is (or is part of) a custom element.
+*   related to the type (regular, slot, custom) of @param element.
 */
 function getChildren (element) {
 
@@ -56,24 +56,25 @@ function getChildren (element) {
 }
 
 /*
-*   traverseDom: Called fn. getChildren to recursively process each element
-*   in the DOM tree that is a descendant of @param startElement.
+*   traverseDom: Calls the getChildren fn. to recursively process each non-
+*   skippable element in the DOM tree that is a descendant of startElement.
 *
 *   @param startElement { DOM element }
 *     The start or next element to recursively process.
 *
 *   @param callbackFn { function }
-*     Function called on each element (its first argment); may be used for
-*     modifying the DOM or saving app-specific element information. For each
-*     invocation of callbackFn, the storageObj and contextObj are passed as
-*     its second and third arguments, respectively.
+*     Function called on each non-skippable element (see fn. isSkippable),
+*     which is passed as its first argument. May be used for modifying the DOM
+*     or saving app-specific element data. For each invocation of callbackFn,
+*     storageObj and contextObj are passed as its second and third arguments.
 *
 *   @param storageObj { object }
-*     Reference to the data structure where element info will be stored.
+*     Reference to the data structure where element data may be stored when
+*     callbackFn is invoked.
 *
 *   @param contextObj { object } [ optional ]
-*     Contains context info and possibly a storage data structure needed
-*     for processing each element. Its value defaults to null.
+*     Context information needed for processing each element. Its default
+*     value is null.
 */
 function traverseDom (startElement, callbackFn, storageObj, contextObj = null) {
 

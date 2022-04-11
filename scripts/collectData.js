@@ -188,8 +188,9 @@ function getStructureInfo (panelPort) {
     landmarks: getLandmarkNode('root') // tree data structure
   };
 
-  removeDataAttributes(); // clean up from any previous traversal
+  removeDataAttributes(); // Clean up from any previous traversal
 
+  // Use fallback if document does not contain body element
   const documentStart =
     (document.body === null) ? document.documentElement : document.body;
   traverseDom(documentStart, saveInfo, info);
