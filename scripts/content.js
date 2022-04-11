@@ -8,7 +8,8 @@ var highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
-  border: 3px solid #ff552e;
+  border-style: solid;
+  border-width: 3px;
   pointer-events: none;
   z-index: 10000;
 }`;
@@ -17,6 +18,9 @@ var focusClass = 'ilps-focus';
 var focusProperties = `{
   outline: 3px dotted purple;
 }`;
+
+var headingColor  = '#ff552e';
+var landmarkColor = '#2e55ff';
 
 console.debug('------------------------');
 console.debug(`URL: ${document.URL}`);
@@ -46,10 +50,17 @@ function messageHandler (message) {
 
 // Add highlighting stylesheet to document
 (function () {
-  let sheet = document.createElement('style');
-  sheet.innerHTML = `.${highlightClass} ${highlightProperties} .${focusClass}:focus ${focusProperties}`;
-  document.body.appendChild(sheet);
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .${highlightClass} ${highlightProperties}
+    .${focusClass}:focus ${focusProperties}
+  `;
+  document.body.appendChild(style);
 })();
+
+function getElementWithDataAttrib (dataId) {
+
+}
 
 function highlightElement (dataId) {
   const prefix = dataId.substring(0, 2);
@@ -103,33 +114,32 @@ function setFocus (element) {
 *   to specified element.
 */
 function addHighlightBox (element, prefix) {
-  let boundingRect = element.getBoundingClientRect();
-  let offset = prefix === 'h-' ? 4 : 0;
   removeOverlays();
 
-  let overlayNode = createOverlay(boundingRect, offset);
-  document.body.appendChild(overlayNode);
+  const boundingRect = element.getBoundingClientRect();
+  const overlayDiv = createOverlay(boundingRect, prefix);
+  document.body.appendChild(overlayDiv);
 }
 
 /*
 *   createOverlay: Use bounding client rectangle and offsets to create an element
 *   that appears as a highlighted border around element corresponding to 'rect'.
 */
-function createOverlay (rect, offset) {
-  console.log(`offset: ${offset}`);
-  const MIN_WIDTH = 68;
-  const MIN_HEIGHT = 27;
+function createOverlay (rect, prefix) {
+  const minWidth = 68, minHeight = 27;
+  const offset = prefix === 'h-' ? 4 : 0;
 
-  let node = document.createElement('div');
-  node.setAttribute('class', highlightClass);
+  const div = document.createElement('div');
+  div.setAttribute('class', highlightClass);
+  div.style.setProperty('border-color', prefix === 'h-' ? headingColor : landmarkColor);
 
-  node.style.left   = Math.round(rect.left - offset * 2 + window.scrollX) + 'px';
-  node.style.top    = Math.round(rect.top  - offset + window.scrollY) + 'px';
+  div.style.left   = Math.round(rect.left - offset + window.scrollX) + 'px';
+  div.style.top    = Math.round(rect.top  - offset + window.scrollY) + 'px';
 
-  node.style.width  = Math.max(rect.width  + offset * 4, MIN_WIDTH)  + 'px';
-  node.style.height = Math.max(rect.height + offset * 2, MIN_HEIGHT) + 'px';
+  div.style.width  = Math.max(rect.width  + offset * 2, minWidth)  + 'px';
+  div.style.height = Math.max(rect.height + offset * 2, minHeight) + 'px';
 
-  return node;
+  return div;
 }
 
 /*
