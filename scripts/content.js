@@ -19,8 +19,8 @@ var focusProperties = `{
   outline: 3px dotted purple;
 }`;
 
-var headingColor  = '#ff552e';
-var landmarkColor = '#2e55ff';
+var headingColor  = '#ff552e'; // illini-orange
+var landmarkColor = '#1d58a7'; // industrial-blue
 
 console.debug('------------------------');
 console.debug(`URL: ${document.URL}`);
@@ -58,8 +58,22 @@ function messageHandler (message) {
   document.body.appendChild(style);
 })();
 
-function getElementWithDataAttrib (dataId) {
+function saveElement (element, info) {
+  if (element.getAttribute(dataAttribName) === info.dataId) {
+    info.element = element;
+  }
+}
 
+function getElementWithDataAttrib (dataId) {
+  const info = { dataId: dataId, element: null };
+
+  // Use fallback if document does not contain body element
+  const documentStart =
+    (document.body === null) ? document.documentElement : document.body;
+
+  // Search DOM for element with dataId
+  traverseDom(documentStart, saveElement, info);
+  return info.element;
 }
 
 function highlightElement (dataId) {
@@ -67,8 +81,8 @@ function highlightElement (dataId) {
   const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
 
-  const element = document.querySelector(`[${dataAttribName}="${dataId}"]`);
-  if (element && isInPage(element)) {
+  const element = getElementWithDataAttrib(dataId);
+  if (element) {
     addHighlightBox(element, prefix);
     element.scrollIntoView({ behavior: 'smooth', block: blockVal });
     currentHighlight = element;
@@ -76,7 +90,7 @@ function highlightElement (dataId) {
     document.addEventListener('blur', blurListener);
   }
   else {
-    console.log(`Element was removed from DOM: ${dataId}`);
+    console.warn(`Unable to find DOM element with attribute: ${dataAttribName}="${dataId}"`);
   }
 }
 
@@ -152,15 +166,4 @@ function removeOverlays () {
   Array.prototype.forEach.call(elements, function (element) {
     document.body.removeChild(element);
   });
-}
-
-/*
-*   isInPage: This function checks to see if an element is a descendant of
-*   the page's body element. Because 'contains' is inclusive, isInPage returns
-*   false when the argument is the body element itself.
-*   MDN: https://developer.mozilla.org/en-US/docs/Web/API/Node/contains
-*/
-function isInPage (element) {
-  if (element === document.body) return false;
-  return document.body.contains(element);
 }
