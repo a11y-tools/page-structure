@@ -163,16 +163,16 @@ function saveLandmarkInfo (element, info, ancestor) {
 }
 
 function logLandmarkNodes (root) {
-  console.debug('------------------------');
+  debug.separator();
   function traverseNodes (startNode, level) {
     startNode.descendants.forEach(node => {
       const text = `${node.value.role}: ${node.value.name}`;
-      console.debug(text.padStart(text.length + (level*2), '-'));
+      debug.log(text.padStart(text.length + (level*2), '-'));
       traverseNodes(node, level+1);
     });
   }
   traverseNodes(root, 0);
-  console.debug('------------------------');
+  debug.separator();
 }
 
 function saveInfo (element, info, ancestor) {
@@ -196,7 +196,7 @@ function getStructureInfo (panelPort) {
   const documentStart =
     (document.body === null) ? document.documentElement : document.body;
   traverseDom(documentStart, saveInfo, info);
-  logLandmarkNodes(info.landmarks);
+  if (debug.flag) { logLandmarkNodes(info.landmarks); }
 
   // Send structure info to the panel.js script
   const message = {
@@ -213,7 +213,7 @@ function getStructureInfo (panelPort) {
 */
 function removeDataAttributes () {
   const dataElements = document.querySelectorAll(`[${dataAttribName}]`);
-  console.log(`dataElements: ${dataElements.length}`);
+  if (debug.flag) { debug.log(`removeDataAttributes: ${dataElements.length}`); }
   dataElements.forEach(elem => {
     elem.removeAttribute(dataAttribName);
   })

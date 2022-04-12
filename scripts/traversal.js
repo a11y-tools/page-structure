@@ -13,11 +13,8 @@ function isSkippable (element) {
     'TEMPLATE',
     'TITLE'
   ];
-  if (skippableNames.includes(element.tagName)) {
-    console.debug(`Skipping element: ${element.tagName}`);
-    return true;
-  }
-  return false;
+
+  return skippableNames.includes(element.tagName);
 }
 
 /*
@@ -38,7 +35,6 @@ function getChildren (element) {
     const assignedElements = (element.assignedElements().length)
       ? element.assignedElements()
       : element.assignedElements({ flatten: true });
-    console.debug(`<slot> name: ${element.name || 'null'}, items: ${assignedElements.length}`);
     return assignedElements;
   }
 
@@ -81,7 +77,7 @@ function traverseDom (startElement, callbackFn, storageObj, contextObj = null) {
   const children = getChildren(startElement);
 
   for (const element of children) {
-    if (isSkippable(element)) continue;
+    if (isSkippable(element)) { continue; }
 
     // Process the element based on criteria defined in callbackFn and
     // the current contextObj

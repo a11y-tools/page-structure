@@ -2,6 +2,7 @@
 *   content.js
 */
 var currentHighlight;
+var debug = new DebugLogger('ilps');
 
 var highlightClass = 'ilps-highlight';
 var highlightProperties = `{
@@ -22,8 +23,10 @@ var focusProperties = `{
 var headingColor  = '#ff552e'; // illini-orange
 var landmarkColor = '#1d58a7'; // industrial-blue
 
-console.debug('------------------------');
-console.debug(`URL: ${document.URL}`);
+if (debug.flag) {
+  debug.separator();
+  debug.log(`URL: ${document.URL}`);
+}
 
 /*
 **  Connect to panel.js script and set up listener/handler
@@ -91,7 +94,7 @@ function highlightElement (dataId) {
     document.addEventListener('blur', blurListener);
   }
   else {
-    console.warn(`Unable to find DOM element with attribute: ${dataAttribName}="${dataId}"`);
+    debug.log(`Unable to find DOM element with attribute: ${dataAttribName}="${dataId}"`);
   }
 }
 
