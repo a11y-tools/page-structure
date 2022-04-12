@@ -127,11 +127,13 @@ function getHeadingInfo (element) {
 
 function saveHeadingInfo (element, info) {
   if (isHeading(element)) {
-    const dataId = `h-${++counter}`;
     const headingInfo = getHeadingInfo(element);
-    headingInfo.dataId = dataId;
-    element.setAttribute(dataAttribName, dataId);
-    info.headings.push(headingInfo);
+    if (headingInfo.visible) {
+      const dataId = `h-${++counter}`;
+      headingInfo.dataId = dataId;
+      element.setAttribute(dataAttribName, dataId);
+      info.headings.push(headingInfo);
+    }
   }
 }
 
