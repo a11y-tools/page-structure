@@ -3,10 +3,9 @@
 */
 
 div {
-  --illini-orange:      #ff552e;
-  --light-blue:         #cad9ef;
-  --light-gray:            #eee;
-  --smaller:          0.9375rem;
+  --light-blue: #cad9ef;
+  --light-gray: #eee;
+  --smaller: 0.9375rem;
 }
 
 [role='listbox'] {
@@ -33,8 +32,9 @@ div {
 
 [role='option'][aria-selected='true'],
 [role='option'][aria-selected='true']:hover {
-  outline: 2px solid var(--illini-orange);
-  outline-offset:  -2px;
+  outline-offset: -2px;
+  outline-style: solid;
+  outline-width: 2px;
 }
 
 .grid-message {
