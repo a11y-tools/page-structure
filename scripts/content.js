@@ -58,21 +58,22 @@ function messageHandler (message) {
   document.body.appendChild(style);
 })();
 
-function saveElement (element, info) {
-  if (element.getAttribute(dataAttribName) === info.dataId) {
-    info.element = element;
-  }
-}
-
 function getElementWithDataAttrib (dataId) {
-  const info = { dataId: dataId, element: null };
+  const info = { element: null };
+
+  // Save element if its data attrib. value matches
+  function conditionalSave (element, info) {
+    if (element.getAttribute(dataAttribName) === dataId) {
+      info.element = element;
+    }
+  }
 
   // Use fallback if document does not contain body element
   const documentStart =
     (document.body === null) ? document.documentElement : document.body;
 
   // Search DOM for element with dataId
-  traverseDom(documentStart, saveElement, info);
+  traverseDom(documentStart, conditionalSave, info);
   return info.element;
 }
 

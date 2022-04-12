@@ -78,16 +78,16 @@ function getChildren (element) {
 */
 function traverseDom (startElement, callbackFn, storageObj, contextObj = null) {
 
-    const children = getChildren(startElement);
+  const children = getChildren(startElement);
 
-    for (const element of children) {
-      if (isSkippable(element)) continue;
+  for (const element of children) {
+    if (isSkippable(element)) continue;
 
-      // Process the element based on criteria defined in callbackFn and
-      // the current contextObj
-      const newContext = callbackFn(element, storageObj, contextObj);
+    // Process the element based on criteria defined in callbackFn and
+    // the current contextObj
+    const newContext = callbackFn(element, storageObj, contextObj);
 
-      // Recursively visit children of element
-      traverseDom(element, callbackFn, storageObj, newContext);
-    }
+    // Recursively visit children of element
+    traverseDom(element, callbackFn, storageObj, newContext);
+  }
 }
