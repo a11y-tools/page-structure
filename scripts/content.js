@@ -85,6 +85,7 @@ function highlightElement (dataId) {
   const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
 
+  if (debug.flag) { debug.log(`hightlightElement: ${dataAttribName}="${dataId}"`); }
   const element = getElementWithDataAttrib(dataId);
   if (element) {
     addHighlightBox(element, prefix);
@@ -94,7 +95,7 @@ function highlightElement (dataId) {
     document.addEventListener('blur', blurListener);
   }
   else {
-    debug.log(`Unable to find DOM element with attribute: ${dataAttribName}="${dataId}"`);
+    debug.log(`Unable to find element with attribute: ${dataAttribName}="${dataId}"`);
   }
 }
 
