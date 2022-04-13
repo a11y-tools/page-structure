@@ -53,11 +53,11 @@ function testForLandmark (element) {
 
   // determination is straightforward for element with 'role' attribute
   if (element.hasAttribute('role')) {
-    const value = element.getAttribute('role');
-    if (roles.includes(value)) {
-      return getLandmarkInfo(element, value);
+    const roleValue = element.getAttribute('role');
+    if (roles.includes(roleValue)) {
+      return getLandmarkInfo(element, roleValue);
     }
-    if (value === 'region') {
+    if (roleValue === 'region') {
       const name = getAccessibleName(element);
       if (name.length) {
         return getLandmarkInfo(element, 'region', name);
@@ -137,9 +137,9 @@ function saveHeadingInfo (element, info) {
   }
 }
 
-function getLandmarkNode (value) {
+function getLandmarkNode (info) {
   return {
-    value: value,
+    info: info,
     descendants: []
   }
 }
@@ -166,7 +166,7 @@ function logLandmarkNodes (root) {
   debug.separator();
   function traverseNodes (startNode, level) {
     startNode.descendants.forEach(node => {
-      const text = `${node.value.role}: ${node.value.name}`;
+      const text = `${node.info.role}: ${node.info.name}`;
       debug.log(text.padStart(text.length + (level*2), '-'));
       traverseNodes(node, level+1);
     });

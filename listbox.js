@@ -172,7 +172,7 @@ class LandmarksBox extends ListBox {
 
   /*
   *   traverseLandmarks: Recursive method for traversing the landmarks tree
-  *   data structure. The 'value' property of the landmarks root node is just
+  *   data structure. The 'info' property of the landmarks root node is just
   *   a placeholder, so only its 'descendants' are of interest.
   *   @param treeNode: initial value is the root node of landmarks tree
   *   @param level: initial value should be 0 (integer)
@@ -182,7 +182,7 @@ class LandmarksBox extends ListBox {
 
     for (let node of treeNode.descendants) {
       // Configure each list option with landmark info
-      let info = node.value;
+      let info = node.info;
       let option = this.createOption(info);
 
       let roleSpan = document.createElement('span');
@@ -204,8 +204,8 @@ class LandmarksBox extends ListBox {
 
   /*
   *   options: infoNode is the root of the landmarks tree structure. It has
-  *   properties 'value' and 'descendants', and each item in its 'descendants'
-  *   array has that identical type (same properties). The 'value' property
+  *   properties 'info' and 'descendants', and each item in its 'descendants'
+  *   array has that identical type (same properties). The 'info' property
   *   of each 'descendants' item is a landmarksInfo object.
   */
   set options (infoNode) {
