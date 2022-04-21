@@ -4,8 +4,8 @@
 
 var currentHighlight;
 
-var highlightClass = 'ilps-highlight';
-var highlightProperties = `{
+const highlightClass = 'ilps-highlight';
+const highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
@@ -15,13 +15,13 @@ var highlightProperties = `{
   z-index: 10000;
 }`;
 
-var focusClass = 'ilps-focus';
-var focusProperties = `{
+const focusClass = 'ilps-focus';
+const focusProperties = `{
   outline: 3px dotted purple;
 }`;
 
-var headingColor  = '#ff552e'; // illini-orange
-var landmarkColor = '#1d58a7'; // industrial-blue
+const headingColor  = '#ff552e'; // illini-orange
+const landmarkColor = '#1d58a7'; // industrial-blue
 
 // Add highlighting stylesheet to document
 (function () {
@@ -57,7 +57,7 @@ function highlightElement (dataId) {
   const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
 
-  if (debug.flag) { debug.log(`hightlightElement: ${dataAttribName}="${dataId}"`); }
+  if (debug.flag) { debug.log(`highlightElement: ${dataAttribName}="${dataId}"`); }
   const element = getElementWithDataAttrib(dataId);
   if (element) {
     addHighlightBox(element, prefix);
