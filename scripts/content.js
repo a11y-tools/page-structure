@@ -2,8 +2,6 @@
 *   content.js
 */
 
-var counter = 0;
-
 if (debug.flag) {
   debug.separator();
   debug.log(`URL: ${document.URL}`);
@@ -161,7 +159,7 @@ function saveHeadingInfo (element, info) {
   if (isHeading(element)) {
     const headingInfo = getHeadingInfo(element);
     if (headingInfo.visible) {
-      const dataId = `h-${++counter}`;
+      const dataId = getDataId('h');
       headingInfo.dataId = dataId;
       element.setAttribute(dataAttribName, dataId);
       info.headings.push(headingInfo);
@@ -180,7 +178,7 @@ function saveLandmarkInfo (element, info, ancestor) {
   let landmarkNode = null;
   const landmarkInfo = testForLandmark(element);
   if (landmarkInfo && landmarkInfo.visible) {
-    const dataId = `l-${++counter}`;
+    const dataId = getDataId('l');
     landmarkInfo.dataId = dataId;
     element.setAttribute(dataAttribName, dataId);
     landmarkNode = getLandmarkNode(landmarkInfo);

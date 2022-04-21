@@ -1,8 +1,20 @@
 /* constants.js */
 
-var dataAttribName = 'data-ilps';
+/*
+*   Generate dataId values
+*/
 
-var debug = new DebugLogger('ilps');
+function *nextValue () {
+  let counter = 0;
+  while (true) {
+    yield ++counter;
+  }
+}
+
+function getDataId (prefix) {
+  const suffix = valueIterator.next().value;
+  return `${prefix}-${suffix}`;
+}
 
 /*
 *   DebugLogger
@@ -48,3 +60,7 @@ class DebugLogger {
 
   separator () { this.log('--------------------------------'); }
 }
+
+const dataAttribName = 'data-ilps';
+const valueIterator = nextValue();
+const debug = new DebugLogger('ilps', true);
