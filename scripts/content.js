@@ -1,27 +1,8 @@
 /*
 *   content.js
 */
-var currentHighlight;
-var debug = new DebugLogger('ilps');
 
-var highlightClass = 'ilps-highlight';
-var highlightProperties = `{
-  position: absolute;
-  overflow: hidden;
-  box-sizing: border-box;
-  border-style: solid;
-  border-width: 3px;
-  pointer-events: none;
-  z-index: 10000;
-}`;
-
-var focusClass = 'ilps-focus';
-var focusProperties = `{
-  outline: 3px dotted purple;
-}`;
-
-var headingColor  = '#ff552e'; // illini-orange
-var landmarkColor = '#1d58a7'; // industrial-blue
+var counter = 0;
 
 if (debug.flag) {
   debug.separator();
@@ -29,8 +10,9 @@ if (debug.flag) {
 }
 
 /*
-**  Connect to panel.js script and set up listener/handler
+*  Connect to panel.js script and set up listener/handler
 */
+
 var panelPort = browser.runtime.connect({ name: 'content' });
 
 panelPort.onMessage.addListener(messageHandler);
@@ -51,124 +33,220 @@ function messageHandler (message) {
   }
 }
 
-// Add highlighting stylesheet to document
-(function () {
-  const style = document.createElement('style');
-  style.innerHTML = `
-    .${highlightClass} ${highlightProperties}
-    .${focusClass}:focus ${focusProperties}
-  `;
-  document.body.appendChild(style);
-})();
+/*
+*   Data collection functions
+*/
 
-function getElementWithDataAttrib (dataId) {
-  const info = { element: null };
+function isHeading (element) {
+  return ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(element.tagName);
+}
 
-  // Save element if its data attrib. value matches
-  function conditionalSave (element, info) {
-    if (element.getAttribute(dataAttribName) === dataId) {
-      info.element = element;
+/*
+*   getLandmarkInfo: The 'name' param will be defined when the accessible name
+*   was already evaluated as a criterion for determining whether 'element' is
+*   to be considered a landmark (based on 'ARIA in HTML' specification).
+*/
+function getLandmarkInfo (element, role, name) {
+  const accessibleName =
+    (name === undefined) ? getAccessibleName(element) : name;
+
+  return {
+    role: role,
+    name: accessibleName,
+    visible: isVisible(element)
+  }
+}
+
+/*
+*   testForLandmark: If element is a landmark, return an object with properties
+*   'role', 'name' and 'visible'; otherwise return null.
+*/
+function testForLandmark (element) {
+  const roles = [
+    'application',
+    'banner',
+    'complementary',
+    'contentinfo',
+    'form',
+    'main',
+    'navigation',
+    'search'
+  ];
+
+  function isDescendantOfNames (element) {
+    const names = ['article', 'aside', 'main', 'nav', 'section'];
+    return names.some(name => element.closest(name));
+  }
+
+  function isDescendantOfRoles (element) {
+    const roles = ['article', 'complementary', 'main', 'navigation', 'region'];
+    return roles.some(role => element.closest(`[role="${role}"]`));
+  }
+
+  // determination is straightforward for element with 'role' attribute
+  if (element.hasAttribute('role')) {
+    const roleValue = element.getAttribute('role');
+    if (roles.includes(roleValue)) {
+      return getLandmarkInfo(element, roleValue);
+    }
+    if (roleValue === 'region') {
+      const name = getAccessibleName(element);
+      if (name.length) {
+        return getLandmarkInfo(element, 'region', name);
+      }
+      return null;
     }
   }
+  else { // element does not have 'role' attribute
+    const tagName = element.tagName.toLowerCase();
+
+    if (tagName === 'aside') {
+      return getLandmarkInfo(element, 'complementary');
+    }
+
+    if (tagName === 'main') {
+      return getLandmarkInfo(element, 'main');
+    }
+
+    if (tagName === 'nav') {
+      return getLandmarkInfo(element, 'navigation');
+    }
+
+    if (tagName === 'footer') {
+      if (!(isDescendantOfNames(element) || isDescendantOfRoles(element))) {
+        return getLandmarkInfo(element, 'contentinfo');
+      }
+      return null;
+    }
+
+    if (tagName === 'header') {
+      if (!(isDescendantOfNames(element) || isDescendantOfRoles(element))) {
+        return getLandmarkInfo(element, 'banner');
+      }
+      return null;
+    }
+
+    if (tagName === 'form') {
+      const name = getAccessibleName(element);
+      if (name.length) {
+        return getLandmarkInfo(element, 'form', name);
+      }
+      return null;
+    }
+
+    if (tagName === 'section') {
+      const name = getAccessibleName(element);
+      if (name.length) {
+        return getLandmarkInfo(element, 'region', name);
+      }
+      return null;
+    }
+
+  } // end else
+
+  return null;
+}
+
+function getHeadingInfo (element) {
+  const contentArray = [];
+  getDescendantTextContent(element, isVisible, contentArray);
+  return {
+    name: element.tagName,
+    text: contentArray.length ? contentArray.join(' ') : '',
+    visible: isVisible(element)
+  }
+}
+
+function saveHeadingInfo (element, info) {
+  if (isHeading(element)) {
+    const headingInfo = getHeadingInfo(element);
+    if (headingInfo.visible) {
+      const dataId = `h-${++counter}`;
+      headingInfo.dataId = dataId;
+      element.setAttribute(dataAttribName, dataId);
+      info.headings.push(headingInfo);
+    }
+  }
+}
+
+function getLandmarkNode (info) {
+  return {
+    info: info,
+    descendants: []
+  }
+}
+
+function saveLandmarkInfo (element, info, ancestor) {
+  let landmarkNode = null;
+  const landmarkInfo = testForLandmark(element);
+  if (landmarkInfo && landmarkInfo.visible) {
+    const dataId = `l-${++counter}`;
+    landmarkInfo.dataId = dataId;
+    element.setAttribute(dataAttribName, dataId);
+    landmarkNode = getLandmarkNode(landmarkInfo);
+    if (ancestor === null) {
+      info.landmarks.descendants.push(landmarkNode);
+    }
+    else {
+      ancestor.descendants.push(landmarkNode);
+    }
+  }
+  return landmarkNode;
+}
+
+function logLandmarkNodes (root) {
+  debug.separator();
+  function traverseNodes (startNode, level) {
+    startNode.descendants.forEach(node => {
+      const text = `${node.info.role}: ${node.info.name}`;
+      debug.log(text.padStart(text.length + (level*2), '-'));
+      traverseNodes(node, level+1);
+    });
+  }
+  traverseNodes(root, 0);
+  debug.separator();
+}
+
+function saveInfo (element, info, ancestor) {
+  saveHeadingInfo(element, info);
+  return saveLandmarkInfo(element, info, ancestor);
+}
+
+/*
+*   getStructureInfo: Traverse DOM and store relevant info for any elements
+*   of interest in the 'info' object; return 'info' object.
+*/
+function getStructureInfo (panelPort) {
+  const info = {
+    headings: [],
+    landmarks: getLandmarkNode('root') // tree data structure
+  };
+
+  removeDataAttributes(); // Clean up from any previous traversal
 
   // Use fallback if document does not contain body element
   const documentStart =
     (document.body === null) ? document.documentElement : document.body;
+  traverseDom(documentStart, saveInfo, info);
+  if (debug.flag) { logLandmarkNodes(info.landmarks); }
 
-  // Search DOM for element with dataId
-  traverseDom(documentStart, conditionalSave, info);
-  return info.element;
-}
+  // Send structure info to the panel.js script
+  const message = {
+    id: 'info',
+    info: info,
+    title: document.title
+  };
 
-function highlightElement (dataId) {
-  const prefix = dataId.substring(0, 2);
-  const blockVal = prefix === 'h-' ? 'center' : 'start';
-  clearHighlights();
-
-  if (debug.flag) { debug.log(`hightlightElement: ${dataAttribName}="${dataId}"`); }
-  const element = getElementWithDataAttrib(dataId);
-  if (element) {
-    addHighlightBox(element, prefix);
-    element.scrollIntoView({ behavior: 'smooth', block: blockVal });
-    currentHighlight = element;
-    document.addEventListener('focus', focusListener);
-    document.addEventListener('blur', blurListener);
-  }
-  else {
-    debug.log(`Unable to find element with attribute: ${dataAttribName}="${dataId}"`);
-  }
-}
-
-function clearHighlights () {
-  removeOverlays();
-  document.removeEventListener('focus', focusListener);
-  document.removeEventListener('blur', blurListener);
-}
-
-function focusListener (event) {
-  setFocus(currentHighlight);
-}
-
-function blurListener (event) {
-  addHighlightBox(currentHighlight);
+  panelPort.postMessage(message);
 }
 
 /*
-*   setFocus: Used by 'focus' event handler for the document after selected
-*   heading has been highlighted and page has been scrolled to bring it into
-*   view. When the user changes focus from the sidebar to the page, add CSS
-*   class for focus styling and set focus to specified heading element.
+*   removeDataAttributes: Prevent attribute values from being out-of-sync
 */
-function setFocus (element) {
-  removeOverlays();
-  element.classList.add(focusClass);
-  element.setAttribute('tabindex', -1);
-  element.focus({
-    preventScroll: false
-  });
-}
-
-/*
-*   addHighlightBox: Clear previous highlighting and add highlight border box
-*   to specified element.
-*/
-function addHighlightBox (element, prefix) {
-  removeOverlays();
-
-  const boundingRect = element.getBoundingClientRect();
-  const overlayDiv = createOverlay(boundingRect, prefix);
-  document.body.appendChild(overlayDiv);
-}
-
-/*
-*   createOverlay: Use bounding client rectangle and offsets to create an element
-*   that appears as a highlighted border around element corresponding to 'rect'.
-*/
-function createOverlay (rect, prefix) {
-  const minWidth = 68, minHeight = 27;
-  const offset = prefix === 'h-' ? 4 : 0;
-
-  const div = document.createElement('div');
-  div.setAttribute('class', highlightClass);
-  div.style.setProperty('border-color', prefix === 'h-' ? headingColor : landmarkColor);
-
-  div.style.left   = Math.round(rect.left - offset + window.scrollX) + 'px';
-  div.style.top    = Math.round(rect.top  - offset + window.scrollY) + 'px';
-
-  div.style.width  = Math.max(rect.width  + offset * 2, minWidth)  + 'px';
-  div.style.height = Math.max(rect.height + offset * 2, minHeight) + 'px';
-
-  return div;
-}
-
-/*
-*   removeOverlays: Utilize 'highlightClass' to remove highlight overlays created
-*   by previous calls to 'addHighlightBox'.
-*/
-function removeOverlays () {
-  let selector = `div.${highlightClass}`;
-  let elements = document.querySelectorAll(selector);
-  Array.prototype.forEach.call(elements, function (element) {
-    document.body.removeChild(element);
-  });
+function removeDataAttributes () {
+  const dataElements = document.querySelectorAll(`[${dataAttribName}]`);
+  if (debug.flag) { debug.log(`removeDataAttributes: ${dataElements.length}`); }
+  dataElements.forEach(elem => {
+    elem.removeAttribute(dataAttribName);
+  })
 }
