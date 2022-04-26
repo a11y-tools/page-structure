@@ -4,8 +4,8 @@
 
 var currentHighlight;
 
-const highlightClass = 'ilps-highlight';
-const highlightProperties = `{
+var highlightClass = 'ilps-highlight';
+var highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
@@ -15,18 +15,15 @@ const highlightProperties = `{
   z-index: 10000;
 }`;
 
-const focusClass = 'ilps-focus';
-const focusProperties = `{
+var focusClass = 'ilps-focus';
+var focusProperties = `{
   outline: 3px dotted purple;
 }`;
-
-const headingColor  = '#ff552e'; // illini-orange
-const landmarkColor = '#1d58a7'; // industrial-blue
 
 // Add highlighting stylesheet to document
 (function () {
   const style = document.createElement('style');
-  style.innerHTML = `
+  style.textContent = `
     .${highlightClass} ${highlightProperties}
     .${focusClass}:focus ${focusProperties}
   `;
@@ -57,7 +54,7 @@ function highlightElement (dataId) {
   const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
 
-  if (debug.flag) { debug.log(`highlightElement: ${dataAttribName}="${dataId}"`); }
+  if (debug) { console.debug(`highlightElement: ${dataAttribName}="${dataId}"`); }
   const element = getElementWithDataAttrib(dataId);
   if (element) {
     addHighlightBox(element, prefix);
@@ -67,7 +64,7 @@ function highlightElement (dataId) {
     document.addEventListener('blur', blurListener);
   }
   else {
-    debug.log(`Unable to find element with attribute: ${dataAttribName}="${dataId}"`);
+    console.warn(`Unable to find element with attribute: ${dataAttribName}="${dataId}"`);
   }
 }
 
@@ -117,6 +114,9 @@ function addHighlightBox (element, prefix) {
 *   that appears as a highlighted border around element corresponding to 'rect'.
 */
 function createOverlay (rect, prefix) {
+  const headingColor  = '#ff552e'; // illini-orange
+  const landmarkColor = '#1d58a7'; // industrial-blue
+
   const minWidth = 68, minHeight = 27;
   const offset = prefix === 'h-' ? 4 : 0;
 
