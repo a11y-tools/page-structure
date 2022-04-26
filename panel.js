@@ -21,7 +21,7 @@ var contentPort;
 var myWindowId;
 
 function logToConsole (...args) {
-  if (true) {
+  if (false) {
     if (args.length === 1) console.debug(args[0]);
     else console.debug(args);
   }
@@ -157,8 +157,6 @@ function handleTabUpdated (tabId, changeInfo, tab) {
 *   Handle tabs.onActivated event
 */
 function handleTabActivated (activeInfo) {
-  // logToConsole('activeInfo: ', activeInfo);
-
   runContentScripts('handleTabActivated');
 }
 
@@ -188,12 +186,14 @@ function handleWindowFocusChanged (windowId) {
 //  Functions that process and display data from content script
 //---------------------------------------------------------------
 
-/*
-*   getFormattedTitle: Extract page title from the page structure message sent
-*   by the content script, and return it embedded in an HTML-formatted string.
-*/
-function getFormattedTitle (message) {
-  return `<p>${message.title}</p>`;
+function updatePageTitle (container, message) {
+  const p = document.createElement('p');
+  p.textContent = message.title;
+
+  while (container.firstChild) {
+    container.removeChild(container.lastChild);
+  }
+  container.appendChild(p);
 }
 
 /*
@@ -205,9 +205,7 @@ function updateSidebar (message) {
   if (typeof message === 'object') {
     const info = message.info;
     removeHighlights();
-
-    // Update the page-title box
-    pageTitle.innerHTML = getFormattedTitle(message);
+    updatePageTitle(pageTitle, message);
 
     // TODO: Move the checking for visible and/or empty list to
     // respective custom elements: HeadingsBox and LandmarksBox
