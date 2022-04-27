@@ -250,10 +250,9 @@ function runContentScripts (callerFn) {
   getActiveTabFor(myWindowId).then(tab => {
     if (tab.url.indexOf('http:') === 0 || tab.url.indexOf('https:') === 0) {
       browser.tabs.executeScript(tab.id, { file: 'scripts/utils.js' });
-      browser.tabs.executeScript(tab.id, { file: 'scripts/constants.js' });
       browser.tabs.executeScript(tab.id, { file: 'scripts/traversal.js' });
-      browser.tabs.executeScript(tab.id, { file: 'scripts/highlight.js' });
       browser.tabs.executeScript(tab.id, { file: 'scripts/content.js' });
+      browser.tabs.executeScript(tab.id, { file: 'scripts/highlight.js' });
     }
     else {
       updateSidebar (protocolNotSupported);

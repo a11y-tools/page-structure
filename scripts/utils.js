@@ -140,3 +140,20 @@ function isVisible (element) {
 function isNonEmptyString (str) {
   return typeof str === 'string' && str.length;
 }
+
+/*
+*   Generate dataId values
+*/
+function *nextValue () {
+  let counter = 0;
+  while (true) {
+    yield ++counter;
+  }
+}
+
+var valueIterator = nextValue();
+
+function getDataId (prefix) {
+  const suffix = valueIterator.next().value;
+  return `${prefix}-${suffix}`;
+}

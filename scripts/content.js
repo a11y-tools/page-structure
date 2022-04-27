@@ -2,6 +2,10 @@
 *   content.js
 */
 
+var dataAttribName = 'data-ilps';
+var separator = '--------------------------------';
+var debug = false;
+
 if (debug) {
   console.debug(separator);
   console.debug(`URL: ${document.URL}`);
