@@ -1,44 +1,19 @@
-# README.md
+# Page Structure: Browser Extension for Firefox
 
-## How messaging works in `page-structure`
+## Summary
 
-The approach to messaging between the extension and its content scripts in
-this version makes use of a 'long-lived connection' as opposed to the simpler
-'one-time request' approach.
+Utilize the Firefox Sidebar to display the structural labels on a web page, including its page title, headings, and landmarks, for web accessibility evaluation.
 
-See the browser extension messaging documentation at
-* https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts
-* https://developer.chrome.com/docs/extensions/mv3/messaging/
+## Description
 
-for in-depth explanations of the differences.
+The Page Structure extension can help you determine whether a web page meets the accessibility requirements for Page Structure, as defined in the <a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines (WCAG) 2.1</a> and <a href="https://www.w3.org/TR/wai-aria-1.2/"> Accessible Rich Internet Applications (WAI-ARIA) 1.2</a> specifications, by displaying the following structural information:
 
-`panel.js`
-* Sets up connection and message handlers for exchanges with `content.js`
-* Runs the content scripts
+<ul>
+<li><strong>Page Title</strong>: Does the title adequately describe the page, i.e. its purpose or main content?</li>
 
-`content.js`
-* Sets up message handler for messages from `panel.js`
-* Establishes connection with `panel.js`, initializes `panelPort`
+<li><strong>Headings</strong>: Are HTML headings used (h1 ... h6) to break down the content into sections and subsections? Do they indicate the hierarchical structure of the content? Users of screen reader software rely on its header navigation functionality, and Page Structure can help you determine whether the list of headings it provides will be adequate for finding content on the page, in terms of both proper structure and clear labeling.</li>
 
-`panel.js`
-* On connection from `content.js`, initializes `contentPort`
-* Sends message on `contentPort` named `getInfo`
+<li><strong>Landmarks</strong>: Are ARIA landmarks used properly to demarcate regions on the page such as main, navigation, banner, footer and contentinfo? Landmarks are important for screen reader users, among others, for skipping from one major region to another on a page. Also, when there are multiple occurrences of the same type of landmark, does each one have a unique label?</li>
+</ul>
 
-`content.js`
-* On receiving message `getInfo`, calls `getStructureInfo` with parameter
-  `panelPort`
-* Upon completion of DOM traversal, `getStructureInfo` sends the `info`
-  message to `panel.js`
-
-`panel.js`
-* On receiving `info` message from `content.js`, calls `updateSidebar`,
-  which populates the title and listbox areas with new data
-
-## Next steps
-
-* The relationship between the listbox and the 'Highlight Selected' and 'Clear
-  Highlighting' buttons needs to be sorted out.
-
-* Initial thoughts are that the buttons need to be incorporated into the
-  listbox custom element, since they connect the user to interactions with the
-  options (namely, activations) in that particular list.
+For examining large pages, the extension enables you to select a heading or landmark and then highlight and scroll to it on the page. Headings are highlighted with an orange outline, and landmarks use a dark blue outline. In an upcoming version, you will be able to customize the highlight colors.

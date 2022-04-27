@@ -5,7 +5,7 @@
   },
 
   "extensionDescription": {
-    "message": "Collect and display structural information, such as page title, headings, and landmarks, from the active tab.",
+    "message": "Utilize the Firefox Sidebar to display the structural labels on a web page, including its page title, headings, and landmarks, for web accessibility evaluation.",
     "description": "Description of the extension"
   },
 
