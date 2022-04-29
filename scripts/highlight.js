@@ -2,7 +2,7 @@
 *   highlight.js
 */
 
-var currentHighlight;
+var currentHighlight = {};
 
 var highlightClass = 'ilps-highlight';
 var highlightProperties = `{
@@ -57,9 +57,10 @@ function highlightElement (dataId) {
   if (debug) { console.debug(`highlightElement: ${dataAttribName}="${dataId}"`); }
   const element = getElementWithDataAttrib(dataId);
   if (element) {
-    addHighlightBox(element, prefix);
+    const elementInfo = { element: element, prefix: prefix };
+    currentHighlight = elementInfo;
+    addHighlightBox(elementInfo);
     element.scrollIntoView({ behavior: 'smooth', block: blockVal });
-    currentHighlight = element;
     document.addEventListener('focus', focusListener);
     document.addEventListener('blur', blurListener);
   }
@@ -86,10 +87,11 @@ function blurListener (event) {
 *   setFocus: Used by 'focus' event handler for the document after selected
 *   heading has been highlighted and page has been scrolled to bring it into
 *   view. When the user changes focus from the sidebar to the page, add CSS
-*   class for focus styling and set focus to specified heading element.
+*   class for focus styling and set focus to specified element.
 */
-function setFocus (element) {
+function setFocus (elementInfo) {
   removeOverlays();
+  const { element } = elementInfo;
   element.classList.add(focusClass);
   element.setAttribute('tabindex', -1);
   element.focus({
@@ -101,9 +103,9 @@ function setFocus (element) {
 *   addHighlightBox: Clear previous highlighting and add highlight border box
 *   to specified element.
 */
-function addHighlightBox (element, prefix) {
+function addHighlightBox (elementInfo) {
   removeOverlays();
-
+  const { element, prefix } = elementInfo;
   const boundingRect = element.getBoundingClientRect();
   const overlayDiv = createOverlay(boundingRect, prefix);
   document.body.appendChild(overlayDiv);
