@@ -38,8 +38,11 @@ tab-set {
 }
 
 #auto-highlight {
-  margin-top: 50px;
-  margin-left: 50px;
+  display: flex;
+  justify-content: center;
+  margin-top: 2.75rem;
+  padding: 1rem 0;
+  width: 100%;
 }
 
 body > details {
