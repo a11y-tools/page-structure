@@ -161,14 +161,20 @@ export default class ListEvents {
   }
 
   selectPrevOption () {
-    if (this.selectedOption === this.firstOption) return;
+    if (this.selectedOption === this.firstOption) {
+      this.setSelected(this.firstOption);
+      return;
+    }
 
     let index = this.optionsList.indexOf(this.selectedOption);
     this.setSelected(this.optionsList[index - 1]);
   }
 
   selectNextOption () {
-    if (this.selectedOption === this.lastOption) return;
+    if (this.selectedOption === this.lastOption) {
+      this.setSelected(this.lastOption);
+      return;
+    }
 
     let index = this.optionsList.indexOf(this.selectedOption);
     this.setSelected(this.optionsList[index + 1]);
