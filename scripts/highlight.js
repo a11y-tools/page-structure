@@ -9,8 +9,6 @@ var highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
-  border-style: solid;
-  border-width: 3px;
   pointer-events: none;
   z-index: 10000;
 }`;
@@ -118,13 +116,18 @@ function addHighlightBox (elementInfo) {
 function createOverlay (rect, prefix) {
   const headingColor  = '#ff552e'; // illini-orange
   const landmarkColor = '#1d58a7'; // industrial-blue
+  const boxShadowColor = prefix === 'h-' ? headingColor : landmarkColor;
+  const boxShadow = `inset 0 0 0 3px ${boxShadowColor}, inset 0 0 0 5px white`;
 
   const minWidth = 68, minHeight = 27;
-  const offset = prefix === 'h-' ? 4 : 0;
+  const offset = prefix === 'h-' ? 5 : 0;
+  const radius = prefix === 'h-' ? 3 : 0;
 
   const div = document.createElement('div');
   div.setAttribute('class', highlightClass);
-  div.style.setProperty('border-color', prefix === 'h-' ? headingColor : landmarkColor);
+
+  div.style.setProperty('box-shadow', boxShadow);
+  div.style.setProperty('border-radius', radius + 'px');
 
   div.style.left   = Math.round(rect.left - offset + window.scrollX) + 'px';
   div.style.top    = Math.round(rect.top  - offset + window.scrollY) + 'px';
