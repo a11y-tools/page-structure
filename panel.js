@@ -5,7 +5,7 @@
 import TabSet from './tabset.js';
 import { HeadingsBox } from './listbox.js';
 import { LandmarksBox } from './listbox.js';
-import { saveOptions } from './storage.js';
+import { getOptions, saveOptions } from './storage.js';
 
 var headingsBox = document.querySelector('headings-box');
 headingsBox.selectionHandler   = handleHeadingSelection;
@@ -18,8 +18,15 @@ landmarksBox.activationHandler = highlightLandmarkElement;
 landmarksBox.clearHLHandler    = removeHighlights;
 
 var autoHighlight = document.getElementById('auto-highlight-checkbox');
-// TODO: store autoHighlight state in local.storage (need change handler)
-autoHighlight.checked = false;
+
+autoHighlight.addEventListener('change', (event) => {
+  const obj = { autoHighlight: event.target.checked };
+  saveOptions(obj);
+});
+
+getOptions().then( options => {
+  autoHighlight.checked = options.autoHighlight;
+});
 
 var tabSet = document.querySelector('tab-set');
 tabSet.addEventListener('tabSelect', (event) => {

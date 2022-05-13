@@ -37,6 +37,11 @@ tab-set {
   margin: 0.5em 0;
 }
 
+#auto-highlight {
+  margin-top: 50px;
+  margin-left: 50px;
+}
+
 body > details {
   height: 10%;
 }

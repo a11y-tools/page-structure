@@ -20,6 +20,12 @@
     "default_title": "__MSG_extensionName__"
   },
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "page-structure@github.com"
+    }
+  },
+
   "sidebar_action": {
     "default_title" : "__MSG_extensionName__",
     "default_panel": "panel.html"

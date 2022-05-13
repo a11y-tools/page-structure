@@ -3,7 +3,7 @@
 */
 
 export const defaultOptions = {
-  isSidebarOpen: false
+  autoHighlight: false
 };
 
 /*
