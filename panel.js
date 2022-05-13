@@ -8,15 +8,43 @@ import { LandmarksBox } from './listbox.js';
 import { saveOptions } from './storage.js';
 
 var headingsBox = document.querySelector('headings-box');
-headingsBox.selectionHandler = enableHeadingsButton;
-headingsBox.activationHandler = highlightHeadingElement;
-headingsBox.clearHLHandler = removeHighlights;
+headingsBox.selectionHandler   = handleHeadingSelection;
+headingsBox.activationHandler  = highlightHeadingElement;
+headingsBox.clearHLHandler     = removeHighlights;
 
 var landmarksBox = document.querySelector('landmarks-box');
-landmarksBox.selectionHandler = enableLandmarksButton;
+landmarksBox.selectionHandler  = handleLandmarkSelection;
 landmarksBox.activationHandler = highlightLandmarkElement;
-landmarksBox.clearHLHandler = removeHighlights;
+landmarksBox.clearHLHandler    = removeHighlights;
 
+var autoHighlight = document.getElementById('auto-highlight-checkbox');
+// TODO: store autoHighlight state in local.storage (need change handler)
+autoHighlight.checked = false;
+
+var tabSet = document.querySelector('tab-set');
+tabSet.addEventListener('tabSelect', (event) => {
+  removeHighlights();
+  const tabId = event.detail;
+  const scrollOptions = { behavior: "smooth", block: "center" };
+
+  switch (tabId) {
+    case 'tab-1':
+    if (headingsBox.listEvents.selectedOption) {
+      headingsBox.listEvents.selectedOption.scrollIntoView(scrollOptions);
+      if (autoHighlight.checked) highlightSelectedHeading();
+    }
+    break;
+
+    case 'tab-2':
+    if (landmarksBox.listEvents.selectedOption) {
+      landmarksBox.listEvents.selectedOption.scrollIntoView(scrollOptions);
+      if (autoHighlight.checked) highlightSelectedLandmark();
+    }
+    break;
+  }
+});
+
+var selectionDelay = 200;
 var contentPort;
 var myWindowId;
 
@@ -35,9 +63,11 @@ const tabIsLoading         = getMessage("tabIsLoading");
 const protocolNotSupported = getMessage("protocolNotSupported");
 
 function addLabelsAndHelpContent () {
-  // page-title-label
   document.getElementById('page-title-label').textContent =
     getMessage("pageTitleLabel");
+
+  document.getElementById('auto-highlight-label').textContent =
+    getMessage("autoHighlightLabel");
 
 /*
   // help-label, help-highlight, help-active and help-focus content
@@ -92,7 +122,43 @@ function onError (error) {
 //  HeadingsBox and LandmarksBox handler functions
 //--------------------------------------------------------------
 
-function highlightHeadingElement (event) {
+function handleHeadingSelection () {
+  if (autoHighlight.checked) {
+    enableHeadingsButton(false);
+    highlightSelectedHeading();
+  }
+  else {
+    enableHeadingsButton(true);
+  }
+}
+
+function handleLandmarkSelection () {
+  if (autoHighlight.checked) {
+    enableLandmarksButton(false);
+    highlightSelectedLandmark();
+  }
+  else {
+    enableLandmarksButton(true);
+  }
+}
+
+var selTimeoutID;
+
+function highlightSelectedHeading () {
+  clearTimeout(selTimeoutID);
+  selTimeoutID = setTimeout(() => {
+    highlightHeadingElement();
+  }, selectionDelay);
+}
+
+function highlightSelectedLandmark () {
+  clearTimeout(selTimeoutID);
+  selTimeoutID = setTimeout(() => {
+    highlightLandmarkElement();
+  }, selectionDelay);
+}
+
+function highlightHeadingElement () {
   const option = headingsBox.selectedOption;
   contentPort.postMessage({
     id: 'highlight',
@@ -100,7 +166,7 @@ function highlightHeadingElement (event) {
   });
 }
 
-function highlightLandmarkElement (event) {
+function highlightLandmarkElement () {
   const option = landmarksBox.selectedOption;
   contentPort.postMessage({
     id: 'highlight',
@@ -137,17 +203,18 @@ function enableLandmarksButton (flag) {
 /*
 *   Handle tabs.onUpdated event when status is 'complete'
 */
-let timeoutID;
+var statusTimeoutID;
+
 function handleTabUpdated (tabId, changeInfo, tab) {
   // Skip content update when new page is loaded in background tab
   if (!tab.active) return;
 
-  clearTimeout(timeoutID);
+  clearTimeout(statusTimeoutID);
   if (changeInfo.status === "complete") {
     runContentScripts('handleTabUpdated');
   }
   else {
-    timeoutID = setTimeout(function () {
+    statusTimeoutID = setTimeout(function () {
       updateSidebar(tabIsLoading);
     }, 250);
   }

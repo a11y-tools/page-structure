@@ -15,7 +15,7 @@ export default class ListEvents {
     this.firstOption    = null;
     this.lastOption     = null;
     this.increment      = 6;
-    this.autoSelect     = true;
+    this.autoSelect     = false;
 
     this.assignEventHandlers();
     this.initOptions();

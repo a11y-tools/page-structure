@@ -34,6 +34,11 @@
     "description": "Label for clearHL button"
   },
 
+  "autoHighlightLabel": {
+    "message": "Automatically highlight on selection change",
+    "description": "Label for auto-highlight-checkbox"
+  },
+
   "helpLabel": {
     "message": "Instructions",
     "description": "Label for help/instructions"

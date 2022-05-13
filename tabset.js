@@ -70,6 +70,8 @@ export default class TabSet extends HTMLElement {
         tab.setAttribute('tabindex', '-1');
       }
     }
+    this.dispatchEvent(new CustomEvent('tabSelect',
+      { detail: id }));
   }
 
   showPanel (id) {
