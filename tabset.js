@@ -58,7 +58,7 @@ export default class TabSet extends HTMLElement {
   }
 
   selectTab (id) {
-    for (let tab of this.tabs) {
+    for (const tab of this.tabs) {
       if (tab.id === id) {
         this.showPanel(tab.getAttribute('aria-controls'));
         tab.setAttribute('aria-selected', 'true');
@@ -87,6 +87,15 @@ export default class TabSet extends HTMLElement {
 
   connectedCallback () {
     this.selectTab('tab-1');
+  }
+
+  get selectedId () {
+    for (const tab of this.tabs) {
+      if (tab.getAttribute('aria-selected') === 'true') {
+        return tab.id;
+      }
+    }
+    return '';
   }
 
   // Event handlers

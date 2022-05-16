@@ -44,27 +44,28 @@ clearButton.addEventListener('click', (event) => {
   removeHighlights();
 });
 
-// currentList is updated whenever 'tabSelect' event is fired
-var currentList = headingsBox;
-
-// Initialize the TabSet elements
+// Initialize TabSet elements and currentList
 
 var tabSet = document.querySelector('tab-set');
+
+function getSelectedListBox (tabId) {
+  switch (tabId) {
+    case 'tab-1':
+      return headingsBox;
+    case 'tab-2':
+      return landmarksBox;
+  }
+}
+
+// Initialize currentList based on the selected tab in tab-set. Note that
+// currentList is also updated whenever the 'tabSelect' event is fired.
+var currentList = getSelectedListBox(tabSet.selectedId);
 
 tabSet.addEventListener('tabSelect', (event) => {
   removeHighlights();
   const tabId = event.detail;
   const scrollOptions = { behavior: "smooth", block: "center" };
-
-  switch (tabId) {
-    case 'tab-1':
-      currentList = headingsBox;
-      break;
-
-    case 'tab-2':
-      currentList = landmarksBox;
-      break;
-  }
+  currentList = getSelectedListBox(tabId);
 
   if (currentList.listEvents.selectedOption) {
     currentList.listEvents.selectedOption.scrollIntoView(scrollOptions);
@@ -122,13 +123,6 @@ browser.windows.getCurrent({ populate: true }).then( (windowInfo) => {
   document.getElementById('page-title-label').textContent = getMessage("pageTitleLabel");
   runContentScripts('windows.getCurrent');
 });
-
-/*
-*   Generic error handler
-*/
-function onError (error) {
-  console.error(`Error: ${error}`);
-}
 
 //--------------------------------------------------------------
 //  HeadingsBox and LandmarksBox handler functions
@@ -242,9 +236,6 @@ function updateSidebar (message) {
     const info = message.info;
     removeHighlights();
     updatePageTitle(pageTitle, message);
-
-    // TODO: Move the checking for visible and/or empty list to
-    // respective custom elements: HeadingsBox and LandmarksBox
 
     // Update the headings listbox
     if (info.headings.filter(item => item.visible).length) {
