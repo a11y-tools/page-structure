@@ -8,7 +8,6 @@ export default class ListEvents {
     this.container      = listbox.container;
     this.onSelected     = listbox.onSelected;
     this.onActivated    = listbox.onActivated;
-    this.onClearHL      = listbox.onClearHL;
 
     this.optionsList    = [];
     this.selectedOption = null;
@@ -24,8 +23,6 @@ export default class ListEvents {
   assignEventHandlers () {
     this.container.addEventListener('focus', this.handleFocus.bind(this));
     this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.listbox.highlightButton.addEventListener('click', this.onActivated);
-    this.listbox.clearHLButton.addEventListener('click', this.onClearHL);
   }
 
   initOptions () {

@@ -5,30 +5,52 @@
 import TabSet from './tabset.js';
 import { HeadingsBox } from './listbox.js';
 import { LandmarksBox } from './listbox.js';
+import ListControls from './listcontrols.js';
 import { getOptions, saveOptions } from './storage.js';
 
+// Initialize the ListBox elements
+
 var headingsBox = document.querySelector('headings-box');
-headingsBox.selectionHandler   = handleHeadingSelection;
-headingsBox.activationHandler  = highlightHeadingElement;
-headingsBox.clearHLHandler     = removeHighlights;
+headingsBox.selectionHandler  = handleSelection;
+headingsBox.activationHandler = highlightElement;
 
 var landmarksBox = document.querySelector('landmarks-box');
-landmarksBox.selectionHandler  = handleLandmarkSelection;
-landmarksBox.activationHandler = highlightLandmarkElement;
-landmarksBox.clearHLHandler    = removeHighlights;
+landmarksBox.selectionHandler  = handleSelection;
+landmarksBox.activationHandler = highlightElement;
 
-var autoHighlight = document.getElementById('auto-highlight-checkbox');
+// Initialize the ListControls elements
 
-autoHighlight.addEventListener('change', (event) => {
-  const obj = { autoHighlight: event.target.checked };
-  saveOptions(obj);
-});
+var listControls = document.querySelector('list-controls');
+var autoHighlight   = listControls.autoCheckbox;
+var highlightButton = listControls.highlightButton;
+var clearButton     = listControls.clearButton;
 
 getOptions().then( options => {
   autoHighlight.checked = options.autoHighlight;
 });
 
+autoHighlight.addEventListener('change', (event) => {
+  const value = event.target.checked;
+  listControls.enableHighlightButton(!value);
+  const obj = { autoHighlight: value };
+  saveOptions(obj);
+});
+
+highlightButton.addEventListener('click', (event) => {
+  highlightElement();
+});
+
+clearButton.addEventListener('click', (event) => {
+  removeHighlights();
+});
+
+// currentList is updated whenever 'tabSelect' event is fired
+var currentList = headingsBox;
+
+// Initialize the TabSet elements
+
 var tabSet = document.querySelector('tab-set');
+
 tabSet.addEventListener('tabSelect', (event) => {
   removeHighlights();
   const tabId = event.detail;
@@ -36,20 +58,23 @@ tabSet.addEventListener('tabSelect', (event) => {
 
   switch (tabId) {
     case 'tab-1':
-    if (headingsBox.listEvents.selectedOption) {
-      headingsBox.listEvents.selectedOption.scrollIntoView(scrollOptions);
-      if (autoHighlight.checked) highlightSelectedHeading();
-    }
-    break;
+      currentList = headingsBox;
+      break;
 
     case 'tab-2':
-    if (landmarksBox.listEvents.selectedOption) {
-      landmarksBox.listEvents.selectedOption.scrollIntoView(scrollOptions);
-      if (autoHighlight.checked) highlightSelectedLandmark();
+      currentList = landmarksBox;
+      break;
+  }
+
+  if (currentList.listEvents.selectedOption) {
+    currentList.listEvents.selectedOption.scrollIntoView(scrollOptions);
+    if (autoHighlight.checked) {
+      highlightSelected();
     }
-    break;
   }
 });
+
+// Other initializations
 
 var selectionDelay = 200;
 var contentPort;
@@ -68,26 +93,6 @@ const noHeadingElements    = getMessage("noHeadingElements");
 const noLandmarkElements   = getMessage("noLandmarkElements");
 const tabIsLoading         = getMessage("tabIsLoading");
 const protocolNotSupported = getMessage("protocolNotSupported");
-
-function addLabelsAndHelpContent () {
-  document.getElementById('page-title-label').textContent =
-    getMessage("pageTitleLabel");
-
-  document.getElementById('auto-highlight-label').textContent =
-    getMessage("autoHighlightLabel");
-
-/*
-  // help-label, help-highlight, help-active and help-focus content
-  document.getElementById('help-label').textContent =
-    getMessage("helpLabel");
-  document.getElementById('help-highlight').textContent =
-    getMessage("helpHighlight");
-  document.getElementById('help-activate').textContent =
-    getMessage("helpActivate");
-  document.getElementById('help-focus').textContent =
-    getMessage("helpFocus");
-*/
-}
 
 /*
 **  Set up listeners/handlers for connection and messages from content script
@@ -109,12 +114,12 @@ function portMessageHandler (message) {
 }
 
 /*
-*   When the sidebar loads, store the ID of the current window; update sidebar
-*   labels and help content, and run content scripts to establish connection.
+*   When the sidebar loads, store the ID of the current window; update the
+*   sidebar labels, and run the content scripts to establish connection.
 */
 browser.windows.getCurrent({ populate: true }).then( (windowInfo) => {
   myWindowId = windowInfo.id;
-  addLabelsAndHelpContent();
+  document.getElementById('page-title-label').textContent = getMessage("pageTitleLabel");
   runContentScripts('windows.getCurrent');
 });
 
@@ -129,83 +134,40 @@ function onError (error) {
 //  HeadingsBox and LandmarksBox handler functions
 //--------------------------------------------------------------
 
-function handleHeadingSelection () {
-  if (autoHighlight.checked) {
-    enableHeadingsButton(false);
-    highlightSelectedHeading();
-  }
-  else {
-    enableHeadingsButton(true);
-  }
+function removeHighlights () {
+  contentPort.postMessage({ id: 'clear' });
 }
 
-function handleLandmarkSelection () {
+function handleSelection () {
   if (autoHighlight.checked) {
-    enableLandmarksButton(false);
-    highlightSelectedLandmark();
+    listControls.enableHighlightButton(false);
+    highlightSelected();
   }
   else {
-    enableLandmarksButton(true);
+    listControls.enableHighlightButton(true);
   }
 }
 
 var selTimeoutID;
 
-function highlightSelectedHeading () {
+function highlightSelected () {
   clearTimeout(selTimeoutID);
   selTimeoutID = setTimeout(() => {
-    highlightHeadingElement();
+    highlightElement();
   }, selectionDelay);
 }
 
-function highlightSelectedLandmark () {
-  clearTimeout(selTimeoutID);
-  selTimeoutID = setTimeout(() => {
-    highlightLandmarkElement();
-  }, selectionDelay);
-}
-
-function highlightHeadingElement () {
-  const option = headingsBox.selectedOption;
+function highlightElement () {
+  const option = currentList.selectedOption;
   contentPort.postMessage({
     id: 'highlight',
     dataId: option.id
   });
 }
 
-function highlightLandmarkElement () {
-  const option = landmarksBox.selectedOption;
-  contentPort.postMessage({
-    id: 'highlight',
-    dataId: option.id
-  });
-}
-
-function removeHighlights () {
-  contentPort.postMessage({ id: 'clear' });
-}
-
-function enableHeadingsButton (flag) {
-  const button = headingsBox.highlightButton;
-
-  if (flag)
-    button.removeAttribute('disabled');
-  else
-    button.setAttribute('disabled', true);
-}
-
-function enableLandmarksButton (flag) {
-  const button = landmarksBox.highlightButton;
-
-  if (flag)
-    button.removeAttribute('disabled');
-  else
-    button.setAttribute('disabled', true);
-}
-
-//-----------------------------------------------
-//  Functions that handle tab and window events
-//-----------------------------------------------
+//---------------------------------------------------------------
+//  Functions that handle browser tab and window events
+//---------------------------------------------------------------
 
 /*
 *   Handle tabs.onUpdated event when status is 'complete'
@@ -307,10 +269,10 @@ function updateSidebar (message) {
   }
 }
 
-//------------------------------------------------------
-//  Functions that run the content scripts to initiate
-//  processing of the data to be sent via port message
-//------------------------------------------------------
+//---------------------------------------------------------------
+//  Functions for running content scripts to initiate the
+//  processing of data in the active browser tab
+//---------------------------------------------------------------
 
 /*
 *   runContentScripts: When content.js is executed, it established a port

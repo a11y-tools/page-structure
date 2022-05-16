@@ -57,7 +57,7 @@ export default class ListControls extends HTMLElement {
 
   initButtons () {
     this.highlightButton.textContent = getMessage('highlightButtonLabel');
-    this.clearButton.textContent     = getMessage('clearHLButtonLabel');
+    this.clearButton.textContent     = getMessage('clearButtonLabel');
     this.checkboxLabel.textContent   = getMessage('autoHighlightLabel');
   }
 

@@ -37,6 +37,7 @@ tab-set {
   margin: 0.5em 0;
 }
 
+/*
 #auto-highlight {
   display: flex;
   justify-content: center;
@@ -44,6 +45,7 @@ tab-set {
   padding: 1rem 0;
   width: 100%;
 }
+*/
 
 body > details {
   height: 10%;

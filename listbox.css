@@ -44,6 +44,11 @@ div {
 }
 
 .buttons-box {
+  display: none;
+}
+
+/*
+.buttons-box {
   display: flex;
   justify-content: space-evenly;
   align-content: space-between;
@@ -73,3 +78,4 @@ button:focus {
               0 0 0 1px #0a84ff,
               0 0 0 4px rgba(10, 132, 255, 0.3);
 }
+*/
