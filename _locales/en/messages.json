@@ -29,7 +29,7 @@
     "description": "Label for highlight button"
   },
 
-  "clearHLButtonLabel": {
+  "clearButtonLabel": {
     "message": "Clear Highlighting",
     "description": "Label for clearHL button"
   },
@@ -37,26 +37,6 @@
   "autoHighlightLabel": {
     "message": "Automatic highlight when selection changes",
     "description": "Label for auto-highlight-checkbox"
-  },
-
-  "helpLabel": {
-    "message": "Instructions",
-    "description": "Label for help/instructions"
-  },
-
-  "helpHighlight": {
-    "message": "When you activate the selected heading in the list, the heading is highlighted on the page and scrolled into view.",
-    "description": "Help text describing how to highlight the selected heading on the page."
-  },
-
-  "helpActivate": {
-    "message": "To activate the selected heading, use the 'Highlight Selected' button, or press 'enter' or 'return', or double-click the selection.",
-    "description": "Help text describing how to activate the selected heading."
-  },
-
-  "helpFocus": {
-    "message": "When a heading is highlighted on the page, using 'F6' to move focus to the page will cause the heading to receive focus.",
-    "description": "Help text describing how to move focus to selected heading."
   },
 
   "emptyContent": {
