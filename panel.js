@@ -77,7 +77,6 @@ tabSet.addEventListener('tabSelect', (event) => {
 
 // Other initializations
 
-var selectionDelay = 200;
 var contentPort;
 var myWindowId;
 
@@ -143,6 +142,7 @@ function handleSelection () {
 }
 
 var selTimeoutID;
+var selectionDelay = 200;
 
 function highlightSelected () {
   clearTimeout(selTimeoutID);
