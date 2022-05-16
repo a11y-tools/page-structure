@@ -10,10 +10,6 @@ const template = document.createElement('template');
 template.innerHTML = `
 <div role="listbox" aria-activedescendant="" tabindex="0">
 </div>
-<div class="buttons-box">
-  <button id="highlight" disabled></button>
-  <button id="clearHL"></button>
-</div>
 `;
 
 function createLink (cssFile) {
@@ -47,21 +43,12 @@ class ListBox extends HTMLElement {
     // Append template content as DOM nodes
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    // Save references to list container element and buttons
+    // Save reference to list container element
     this.container = this.shadowRoot.querySelector('[role="listbox"]');
-    this.highlightButton = this.shadowRoot.querySelector('#highlight');
-    this.clearHLButton = this.shadowRoot.querySelector('#clearHL');
 
-    // Init. handler function references and button labels
+    // Init. handler function references
     this.onSelected  = null;
     this.onActivated = null;
-    this.onClearHL   = null;
-    this.initButtons();
-  }
-
-  initButtons () {
-    this.highlightButton.textContent = getMessage('highlightButtonLabel');
-    this.clearHLButton.textContent = getMessage('clearHLButtonLabel');
   }
 
   createOption (info) {
@@ -95,10 +82,6 @@ class ListBox extends HTMLElement {
 
   set activationHandler (handlerFn) {
     this.onActivated = handlerFn;
-  }
-
-  set clearHLHandler (handlerFn) {
-    this.onClearHL = handlerFn;
   }
 
   set message (msgText) {
