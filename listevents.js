@@ -121,13 +121,12 @@ export default class ListEvents {
     this.listbox.selectedOption = option;
     option.setAttribute('aria-selected', 'true');
     this.container.setAttribute('aria-activedescendant', option.id);
-    this.scrollSelectedOption();
+    this.scrollSelected(option);
     if (this.onSelected) this.onSelected(option);
   }
 
-  scrollSelectedOption () {
-    let container = this.container;
-    let element = this.selectedOption;
+  scrollSelected (element) {
+    const container = this.container;
 
     // Note: element.offsetTop is the number of pixels from the top of the
     // closest relatively positioned parent element. Thus the CSS for the
