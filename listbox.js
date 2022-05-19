@@ -2,10 +2,6 @@
 *   listbox.js
 */
 
-import ListEvents from './listevents.js';
-
-const getMessage = browser.i18n.getMessage;
-
 const template = document.createElement('template');
 template.innerHTML = `
 <div role="listbox" aria-activedescendant="" tabindex="0">
@@ -19,11 +15,7 @@ function createLink (cssFile) {
   return link;
 }
 
-//----------------------------------------------------------------
-//  ListBox
-//----------------------------------------------------------------
-
-class ListBox extends HTMLElement {
+export default class ListBox extends HTMLElement {
   constructor () {
     super();
     this.attachShadow({ mode: 'open' });
@@ -43,10 +35,8 @@ class ListBox extends HTMLElement {
     // Append template content as DOM nodes
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    // Save reference to list container element
-    this.container = this.shadowRoot.querySelector('[role="listbox"]');
-
-    // Init. other instance properties
+    // Initialize properties
+    this.container   = this.shadowRoot.querySelector('[role="listbox"]');
     this.selected    = null;
     this.onSelected  = null;
     this.onActivated = null;
@@ -63,19 +53,19 @@ class ListBox extends HTMLElement {
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }
-    this.selected = null;
+    this.selectedOption = null;
   }
 
   get optionsList () {
     return this.shadowRoot.querySelectorAll('[role="option"]');
   }
 
-  set selectedOption (option) {
-    this.selected = option;
-  }
-
   get selectedOption () {
     return this.selected;
+  }
+
+  set selectedOption (option) {
+    this.selected = option;
   }
 
   set selectionHandler (handlerFn) {
@@ -94,116 +84,3 @@ class ListBox extends HTMLElement {
     this.container.appendChild(div);
   }
 }
-
-//----------------------------------------------------------------
-//  HeadingsBox
-//----------------------------------------------------------------
-
-class HeadingsBox extends ListBox {
-  constructor () {
-    super();
-    this.emptyMessage = getMessage("emptyContent");
-  }
-
-  getClassNames (info) {
-    const classNames = [];
-    const prefix = info.name.toLowerCase();
-    classNames.push(`${prefix}-name`);
-    classNames.push(`${prefix}-text`);
-    return classNames;
-  }
-
-  set options (infoArray) {
-    this.clearOptions();
-
-    // Configure each list option with heading info
-    infoArray.forEach(info => {
-      let option = this.createOption(info);
-      let classNames = this.getClassNames(info);
-
-      let nameSpan = document.createElement('span');
-      nameSpan.classList.add(classNames[0]);
-      nameSpan.textContent = info.name;
-      option.appendChild(nameSpan);
-
-      let textSpan = document.createElement('span');
-      textSpan.classList.add(classNames[1]);
-      // Check for empty heading content
-      if (info.text.trim() === '') {
-        textSpan.classList.add('empty');
-        textSpan.textContent = this.emptyMessage;
-      }
-      else {
-        textSpan.textContent = info.text;
-      }
-      option.appendChild(textSpan);
-
-      this.container.appendChild(option);
-    });
-
-    // ListBox container is now fully populated with option elements
-    this.listEvents = new ListEvents(this);
-  }
-}
-
-//----------------------------------------------------------------
-//  LandmarksBox
-//----------------------------------------------------------------
-
-class LandmarksBox extends ListBox {
-  constructor () {
-    super();
-  }
-
-  /*
-  *   traverseLandmarks: Recursive method for traversing the landmarks tree
-  *   data structure. The 'info' property of the landmarks root node is just
-  *   a placeholder, so only its 'descendants' are of interest.
-  *   @param treeNode: initial value is the root node of landmarks tree
-  *   @param level: initial value should be 0 (integer)
-  */
-  traverseLandmarks (treeNode, level) {
-    let prefix = '\u2014\xa0';
-
-    for (let node of treeNode.descendants) {
-      // Configure each list option with landmark info
-      let info = node.info;
-      let option = this.createOption(info);
-
-      let roleSpan = document.createElement('span');
-      roleSpan.classList.add('role');
-      roleSpan.textContent = prefix.repeat(level) + info.role;
-      option.appendChild(roleSpan);
-
-      if (info.name.length) {
-        let nameSpan = document.createElement('span');
-        nameSpan.classList.add('name');
-        nameSpan.textContent = info.name;
-        option.appendChild(nameSpan);
-      }
-
-      this.container.appendChild(option);
-      this.traverseLandmarks(node, level + 1);
-    }
-  }
-
-  /*
-  *   options: infoNode is the root of the landmarks tree structure. It has
-  *   properties 'info' and 'descendants', and each item in its 'descendants'
-  *   array has that identical type (same properties). The 'info' property
-  *   of each 'descendants' item is a landmarksInfo object.
-  */
-  set options (infoNode) {
-    this.clearOptions();
-
-    // Use recursive method for harvesting data in landmarks tree structure
-    this.traverseLandmarks(infoNode, 0);
-
-    // ListBox container is now fully populated with option elements
-    this.listEvents = new ListEvents(this);
-  }
-}
-
-customElements.define('headings-box', HeadingsBox);
-customElements.define('landmarks-box', LandmarksBox);
-export { HeadingsBox, LandmarksBox };
