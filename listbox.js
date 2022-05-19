@@ -46,7 +46,8 @@ class ListBox extends HTMLElement {
     // Save reference to list container element
     this.container = this.shadowRoot.querySelector('[role="listbox"]');
 
-    // Init. handler function references
+    // Init. other instance properties
+    this.selected    = null;
     this.onSelected  = null;
     this.onActivated = null;
   }
@@ -62,6 +63,7 @@ class ListBox extends HTMLElement {
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }
+    this.selected = null;
   }
 
   get optionsList () {

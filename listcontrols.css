@@ -38,6 +38,10 @@ button:focus {
               0 0 0 4px rgba(10, 132, 255, 0.3);
 }
 
+button[disabled] {
+  opacity: 40%;
+}
+
 .auto-highlight {
   display: flex;
   justify-content: center;

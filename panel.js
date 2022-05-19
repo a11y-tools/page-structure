@@ -30,10 +30,9 @@ getOptions().then( options => {
 });
 
 autoHighlight.addEventListener('change', (event) => {
-  const value = event.target.checked;
-  listControls.enableHighlightButton(!value);
-  const obj = { autoHighlight: value };
-  saveOptions(obj);
+  const checked = event.target.checked;
+  // listControls.enableHighlightButton(!checked);
+  saveOptions({ autoHighlight: checked });
 });
 
 highlightButton.addEventListener('click', (event) => {
@@ -67,11 +66,16 @@ tabSet.addEventListener('tabSelect', (event) => {
   const scrollOptions = { behavior: "smooth", block: "center" };
   currentList = getSelectedListBox(tabId);
 
-  if (currentList.listEvents.selectedOption) {
-    currentList.listEvents.selectedOption.scrollIntoView(scrollOptions);
+  const selectedOption = currentList.selectedOption;
+  if (selectedOption) {
+    selectedOption.scrollIntoView(scrollOptions);
     if (autoHighlight.checked) {
       highlightSelected();
     }
+    listControls.enableHighlightButton(true);
+  }
+  else {
+    listControls.enableHighlightButton(false);
   }
 });
 
@@ -132,12 +136,9 @@ function removeHighlights () {
 }
 
 function handleSelection () {
+  listControls.enableHighlightButton(true);
   if (autoHighlight.checked) {
-    listControls.enableHighlightButton(false);
     highlightSelected();
-  }
-  else {
-    listControls.enableHighlightButton(true);
   }
 }
 
@@ -252,6 +253,9 @@ function updateSidebar (message) {
     else {
       landmarksBox.message = noLandmarkElements;
     }
+
+    // Set initial state of highlightButton as disabled
+    listControls.enableHighlightButton(false);
   }
   else {
     pageTitle.textContent = message;
