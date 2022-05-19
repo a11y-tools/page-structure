@@ -3,8 +3,8 @@
 */
 
 import TabSet from './tabset.js';
-import { HeadingsBox } from './listbox.js';
-import { LandmarksBox } from './listbox.js';
+import HeadingsBox from './headings.js';
+import LandmarksBox from './landmarks.js';
 import ListControls from './listcontrols.js';
 import { getOptions, saveOptions } from './storage.js';
 
@@ -34,14 +34,6 @@ autoHighlight.addEventListener('change', (event) => {
   saveOptions({ autoHighlight: checked });
 });
 
-highlightButton.addEventListener('click', (event) => {
-  highlightElement();
-});
-
-clearButton.addEventListener('click', (event) => {
-  removeHighlights();
-});
-
 // Initialize TabSet elements and currentList
 
 var tabSet = document.querySelector('tab-set');
@@ -69,13 +61,24 @@ tabSet.addEventListener('tabSelect', (event) => {
   if (selectedOption) {
     selectedOption.scrollIntoView(scrollOptions);
     if (autoHighlight.checked) {
-      highlightSelected();
+      highlightSelected(selectedOption);
     }
     listControls.enableHighlightButton(true);
   }
   else {
     listControls.enableHighlightButton(false);
   }
+});
+
+highlightButton.addEventListener('click', (event) => {
+  const selectedOption = currentList.selectedOption;
+  if (selectedOption) {
+    highlightElement(selectedOption);
+  }
+});
+
+clearButton.addEventListener('click', (event) => {
+  removeHighlights();
 });
 
 // Other initializations
@@ -134,25 +137,24 @@ function removeHighlights () {
   contentPort.postMessage({ id: 'clear' });
 }
 
-function handleSelection () {
+function handleSelection (option) {
   listControls.enableHighlightButton(true);
   if (autoHighlight.checked) {
-    highlightSelected();
+    highlightSelected(option);
   }
 }
 
 var selTimeoutID;
 var selectionDelay = 200;
 
-function highlightSelected () {
+function highlightSelected (option) {
   clearTimeout(selTimeoutID);
   selTimeoutID = setTimeout(() => {
-    highlightElement();
+    highlightElement(option);
   }, selectionDelay);
 }
 
-function highlightElement () {
-  const option = currentList.selectedOption;
+function highlightElement (option) {
   contentPort.postMessage({
     id: 'highlight',
     dataId: option.id

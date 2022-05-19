@@ -13,6 +13,7 @@ export default class ListEvents {
     this.selectedOption = null;
     this.firstOption    = null;
     this.lastOption     = null;
+
     this.increment      = 6;
     this.autoSelect     = false;
 
@@ -46,7 +47,7 @@ export default class ListEvents {
 
   handleFocus (event) {
     if (this.selectedOption && this.onSelected) {
-      this.onSelected(true);
+      this.onSelected(this.selectedOption);
     }
   }
 
@@ -95,7 +96,7 @@ export default class ListEvents {
       // Activation keys
       case 'Enter':
       case ' ':
-        if (this.onActivated) this.onActivated();
+        if (this.onActivated) this.onActivated(event.currentTarget);
         flag = true;
         break;
     }
@@ -111,20 +112,17 @@ export default class ListEvents {
   }
 
   handleDblClick (event) {
-    if (this.onActivated) this.onActivated();
+    if (this.onActivated) this.onActivated(event.currentTarget);
   }
 
   setSelected (option) {
-    if (this.selectedOption) {
-      this.selectedOption.removeAttribute('aria-selected')
-    }
-
+    this.selectedOption?.removeAttribute('aria-selected');
     this.selectedOption = option;
     this.listbox.selectedOption = option;
     option.setAttribute('aria-selected', 'true');
     this.container.setAttribute('aria-activedescendant', option.id);
     this.scrollSelectedOption();
-    if (this.onSelected) this.onSelected(true);
+    if (this.onSelected) this.onSelected(option);
   }
 
   scrollSelectedOption () {
