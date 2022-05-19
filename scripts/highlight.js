@@ -90,11 +90,11 @@ function blurListener (event) {
 function setFocus (elementInfo) {
   removeOverlays();
   const { element } = elementInfo;
-  element.classList.add(focusClass);
-  element.setAttribute('tabindex', -1);
-  element.focus({
-    preventScroll: false
-  });
+  if (element) {
+    element.classList.add(focusClass);
+    element.setAttribute('tabindex', -1);
+    element.focus({ preventScroll: false });
+  }
 }
 
 /*
@@ -104,9 +104,11 @@ function setFocus (elementInfo) {
 function addHighlightBox (elementInfo) {
   removeOverlays();
   const { element, prefix } = elementInfo;
-  const boundingRect = element.getBoundingClientRect();
-  const overlayDiv = createOverlay(boundingRect, prefix);
-  document.body.appendChild(overlayDiv);
+  if (element) {
+    const boundingRect = element.getBoundingClientRect();
+    const overlayDiv = createOverlay(boundingRect, prefix);
+    document.body.appendChild(overlayDiv);
+  }
 }
 
 /*
