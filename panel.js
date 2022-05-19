@@ -31,7 +31,6 @@ getOptions().then( options => {
 
 autoHighlight.addEventListener('change', (event) => {
   const checked = event.target.checked;
-  // listControls.enableHighlightButton(!checked);
   saveOptions({ autoHighlight: checked });
 });
 
@@ -57,7 +56,7 @@ function getSelectedListBox (tabId) {
 }
 
 // Initialize currentList based on the selected tab in tab-set. Note that
-// currentList is also updated whenever the 'tabSelect' event is fired.
+// this variable is also updated whenever the 'tabSelect' event is fired.
 var currentList = getSelectedListBox(tabSet.selectedId);
 
 tabSet.addEventListener('tabSelect', (event) => {
