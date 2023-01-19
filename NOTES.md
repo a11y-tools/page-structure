@@ -14,11 +14,12 @@ for in-depth explanations of the differences.
 
 `panel.js`
 * Sets up connection and message handlers for exchanges with `content.js`
-* Runs the content scripts
+* Runs the content script to initialize `contentPort` to which it can send
+  subsequent messages
 
 `content.js`
 * Sets up message handler for messages from `panel.js`
-* Establishes connection with `panel.js`, initializes `panelPort`
+* Establishes long-lived connection with `panel.js`, initializes `panelPort`
 
 `panel.js`
 * On connection from `content.js`, initializes `contentPort`
