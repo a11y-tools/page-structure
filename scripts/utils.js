@@ -2,12 +2,27 @@
 *   utils.js
 */
 
+// Generator constructor
+function *nextValue () {
+  let counter = 0;
+  while (true) {
+    yield ++counter;
+  }
+}
+
+// Generator instance
+var generator = nextValue();
+
+export function getDataId (prefix) {
+  return `${prefix}-${generator.next().value}`;
+}
+
 /*
 *   getDescendantTextContent: Collect the textContent values of child text
 *   nodes, and descendant text nodes of child elements that meet the predicate
 *   condition, by storing the values in the results array.
 */
-function getDescendantTextContent (node, predicate, results) {
+export function getDescendantTextContent (node, predicate, results) {
   // Process the child nodes
   for (let i = 0; i < node.childNodes.length; i++) {
     let child = node.childNodes[i];
@@ -29,7 +44,7 @@ function getDescendantTextContent (node, predicate, results) {
 /*
 *   getAccessibleName
 */
-function getAccessibleName (element) {
+export function getAccessibleName (element) {
 
   // Check for 'aria-labelledby' attribute
   if (element.hasAttribute('aria-labelledby')) {
@@ -113,7 +128,7 @@ function getTextContent (elem) {
 *   until document element is reached, to determine whether element or any
 *   of its ancestors has properties set that affect its visibility.
 */
-function isVisible (element) {
+export function isVisible (element) {
   if (element.nodeType === Node.DOCUMENT_NODE) return true;
 
   if (element.nodeType === Node.ELEMENT_NODE) {
@@ -139,21 +154,4 @@ function isVisible (element) {
 */
 function isNonEmptyString (str) {
   return typeof str === 'string' && str.length;
-}
-
-/*
-*   Generate dataId values
-*/
-function *nextValue () {
-  let counter = 0;
-  while (true) {
-    yield ++counter;
-  }
-}
-
-var valueIterator = nextValue();
-
-function getDataId (prefix) {
-  const suffix = valueIterator.next().value;
-  return `${prefix}-${suffix}`;
 }

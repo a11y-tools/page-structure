@@ -2,10 +2,13 @@
 *   highlight.js
 */
 
+import traverseDom from './traversal.js';
+import { dataAttribName } from './constants.js';
+
 var currentHighlight = {};
 
-var highlightClass = 'ilps-highlight';
-var highlightProperties = `{
+const highlightClass = 'ilps-highlight';
+const highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
@@ -13,20 +16,20 @@ var highlightProperties = `{
   z-index: 10000;
 }`;
 
-var focusClass = 'ilps-focus';
-var focusProperties = `{
+const focusClass = 'ilps-focus';
+const focusProperties = `{
   outline: 3px dotted purple;
 }`;
 
 // Add highlighting stylesheet to document
-(function () {
+export function addHighlightStyle () {
   const style = document.createElement('style');
   style.textContent = `
     .${highlightClass} ${highlightProperties}
     .${focusClass}:focus ${focusProperties}
   `;
   document.body.appendChild(style);
-})();
+}
 
 function getElementWithDataAttrib (dataId) {
   const info = { element: null };
@@ -44,30 +47,31 @@ function getElementWithDataAttrib (dataId) {
 
   // Search DOM for element with dataId
   traverseDom(documentStart, conditionalSave, info);
+  console.log(`info.element: ${info.element.tagName}`);
   return info.element;
 }
 
-function highlightElement (dataId) {
+export function highlightElement (dataId) {
   const prefix = dataId.substring(0, 2);
   const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
 
   if (debug) { console.debug(`highlightElement: ${dataAttribName}="${dataId}"`); }
   const element = getElementWithDataAttrib(dataId);
-  if (element) {
-    const elementInfo = { element: element, prefix: prefix };
-    currentHighlight = elementInfo;
-    addHighlightBox(elementInfo);
-    element.scrollIntoView({ behavior: 'smooth', block: blockVal });
-    document.addEventListener('focus', focusListener);
-    document.addEventListener('blur', blurListener);
-  }
-  else {
+  if (element === null) {
     console.warn(`Unable to find element with attribute: ${dataAttribName}="${dataId}"`);
+    return;
   }
+
+  const elementInfo = { element: element, prefix: prefix };
+  currentHighlight = elementInfo;
+  addHighlightBox(elementInfo);
+  element.scrollIntoView({ behavior: 'smooth', block: blockVal });
+  document.addEventListener('focus', focusListener);
+  document.addEventListener('blur', blurListener);
 }
 
-function clearHighlights () {
+export function clearHighlights () {
   removeOverlays();
   document.removeEventListener('focus', focusListener);
   document.removeEventListener('blur', blurListener);

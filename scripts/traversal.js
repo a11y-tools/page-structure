@@ -72,7 +72,7 @@ function getChildren (element) {
 *     Context information needed for processing each element. Its default
 *     value is null.
 */
-function traverseDom (startElement, callbackFn, storageObj, contextObj = null) {
+export default function traverseDom (startElement, callbackFn, storageObj, contextObj = null) {
 
   const children = getChildren(startElement);
 
