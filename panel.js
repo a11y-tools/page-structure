@@ -121,12 +121,12 @@ function portMessageHandler (message) {
 
 /*
 *   When the sidebar loads, store the ID of the current window; update the
-*   sidebar labels, and run the content scripts to establish connection.
+*   sidebar labels, and run the content script to establish connection.
 */
 browser.windows.getCurrent({ populate: true }).then( (windowInfo) => {
   myWindowId = windowInfo.id;
   document.getElementById('page-title-label').textContent = getMessage("pageTitleLabel");
-  runContentScripts('windows.getCurrent');
+  runContentScript('windows.getCurrent');
 });
 
 //--------------------------------------------------------------
@@ -176,7 +176,7 @@ function handleTabUpdated (tabId, changeInfo, tab) {
 
   clearTimeout(statusTimeoutID);
   if (changeInfo.status === "complete") {
-    runContentScripts('handleTabUpdated');
+    runContentScript('handleTabUpdated');
   }
   else {
     statusTimeoutID = setTimeout(function () {
@@ -189,7 +189,7 @@ function handleTabUpdated (tabId, changeInfo, tab) {
 *   Handle tabs.onActivated event
 */
 function handleTabActivated (activeInfo) {
-  runContentScripts('handleTabActivated');
+  runContentScript('handleTabActivated');
 }
 
 /*
@@ -202,7 +202,7 @@ function handleWindowFocusChanged (windowId) {
     .then(isOpen => {
       if (isOpen) {
         myWindowId = windowId;
-        runContentScripts('onFocusChanged');
+        runContentScript('onFocusChanged');
         logToConsole(`Focus changed to window: ${myWindowId}`);
       }
     })
@@ -266,27 +266,21 @@ function updateSidebar (message) {
 }
 
 //---------------------------------------------------------------
-//  Functions for running content scripts to initiate the
+//  Functions for running content script to initiate the
 //  processing of data in the active browser tab
 //---------------------------------------------------------------
 
 /*
-*   runContentScripts: When content.js is executed, it established a port
+*   runContentScript: When content.js is executed, it establishes a port
 *   connection with this script (panel.js), which in turn has a port message
 *   handler listening for the 'info' message. When that message is received,
 *   the handler calls the updateSidebar function with the structure info.
 */
-function runContentScripts (callerFn) {
-  logToConsole(`runContentScripts invoked by ${callerFn}`);
+function runContentScript (callerFn) {
+  logToConsole(`runContentScript invoked by ${callerFn}`);
 
   getActiveTabFor(myWindowId).then(tab => {
     if (tab.url.indexOf('http:') === 0 || tab.url.indexOf('https:') === 0) {
-      /*
-      browser.tabs.executeScript(tab.id, { file: 'scripts/utils.js' });
-      browser.tabs.executeScript(tab.id, { file: 'scripts/traversal.js' });
-      browser.tabs.executeScript(tab.id, { file: 'scripts/content.js' });
-      browser.tabs.executeScript(tab.id, { file: 'scripts/highlight.js' });
-      */
       browser.tabs.executeScript(tab.id, { file: 'content.js' });
     }
     else {
