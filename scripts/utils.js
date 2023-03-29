@@ -11,7 +11,7 @@ function *nextValue () {
 }
 
 // Generator instance
-var generator = nextValue();
+const generator = nextValue();
 
 export function getDataId (prefix) {
   return `${prefix}-${generator.next().value}`;

@@ -314,7 +314,7 @@ function *nextValue () {
 }
 
 // Generator instance
-var generator = nextValue();
+const generator = nextValue();
 
 function getDataId (prefix) {
   return `${prefix}-${generator.next().value}`;
