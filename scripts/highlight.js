@@ -12,7 +12,7 @@ const highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 10000;
 }`;
 
@@ -110,7 +110,7 @@ function addHighlightBox (elementInfo) {
   const { element, prefix } = elementInfo;
   if (element) {
     const boundingRect = element.getBoundingClientRect();
-    const overlayDiv = createOverlay(boundingRect, prefix);
+    const overlayDiv = createOverlay(boundingRect, prefix, element.tagName);
     document.body.appendChild(overlayDiv);
   }
 }
@@ -119,7 +119,7 @@ function addHighlightBox (elementInfo) {
 *   createOverlay: Use bounding client rectangle and offsets to create an element
 *   that appears as a highlighted border around element corresponding to 'rect'.
 */
-function createOverlay (rect, prefix) {
+function createOverlay (rect, prefix, tagName) {
   const headingColor  = '#ff552e'; // illini-orange
   const landmarkColor = '#1d58a7'; // industrial-blue
   const boxShadowColor = prefix === 'h-' ? headingColor : landmarkColor;
@@ -131,6 +131,7 @@ function createOverlay (rect, prefix) {
 
   const div = document.createElement('div');
   div.setAttribute('class', highlightClass);
+  div.setAttribute('title', `${tagName} element`);
 
   div.style.setProperty('box-shadow', boxShadow);
   div.style.setProperty('border-radius', radius + 'px');
