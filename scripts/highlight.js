@@ -41,7 +41,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}[data-heading]:after {
     content: attr(data-heading);
     background-color: ${headingColor};
-    padding: 3px 7px 2px 8px;
+    padding: 3px 7px 3px 8px;
   }
   .${highlightClass}[data-landmark] {
     box-shadow: inset 0 0 0 3px ${landmarkColor}, inset 0 0 0 5px white;
@@ -49,7 +49,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}[data-landmark]:after {
     content: attr(data-landmark);
     background-color: ${landmarkColor};
-    padding: 3px 8px;
+    padding: 3px 8px 4px;
   }
   .${focusClass}:focus {
     outline: 3px dotted purple;
@@ -116,6 +116,7 @@ function focusListener (event) {
 }
 
 function blurListener (event) {
+  removeFocusClass(currentHighlight);
   addHighlightBox(currentHighlight);
 }
 
@@ -184,4 +185,15 @@ function removeOverlays () {
   Array.prototype.forEach.call(elements, function (element) {
     document.body.removeChild(element);
   });
+}
+
+/*
+*   removeFocusClass: Remove CSS class that displays a visual outline indicator
+*   to show that an element has focus.
+*/
+function removeFocusClass (elementInfo) {
+  const { element } = elementInfo;
+  if (element) {
+    element.classList.remove(focusClass);
+  }
 }
