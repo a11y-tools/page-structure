@@ -4,6 +4,7 @@
 
 import traverseDom from './traversal.js';
 import { dataAttribName } from './constants.js';
+export { addHighlightStyle, highlightElement, clearHighlights };
 
 var currentHighlight = {};
 
@@ -28,7 +29,7 @@ styleTemplate.innerHTML = `
 `;
 
 // Add highlighting stylesheet to document if not already there
-export function addHighlightStyle () {
+function addHighlightStyle () {
   if (document.querySelector(`style[title="${styleName}"]`) === null) {
     document.body.appendChild(styleTemplate.content.cloneNode(true));
   }
@@ -54,7 +55,7 @@ function getElementWithDataAttrib (dataId) {
   return info.element;
 }
 
-export function highlightElement (dataId) {
+function highlightElement (dataId) {
   const prefix = dataId.substring(0, 2);
   const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
@@ -74,7 +75,7 @@ export function highlightElement (dataId) {
   document.addEventListener('blur', blurListener);
 }
 
-export function clearHighlights () {
+function clearHighlights () {
   removeOverlays();
   document.removeEventListener('focus', focusListener);
   document.removeEventListener('blur', blurListener);
