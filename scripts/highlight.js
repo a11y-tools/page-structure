@@ -26,11 +26,11 @@ styleTemplate.innerHTML = `
   }
   .${highlightClass}:after {
     color: white;
-    font-size: 120%;
+    font-family: sans-serif;
+    font-size: 1.2rem;
     font-weight: bold;
     position: absolute;
     overflow: visible;
-    padding: 1px 8px 3px;
     top: 3px;
     right: 0;
     z-index: 20000;
@@ -41,6 +41,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}[data-heading]:after {
     content: attr(data-heading);
     background-color: ${headingColor};
+    padding: 3px 7px 2px 8px;
   }
   .${highlightClass}[data-landmark] {
     box-shadow: inset 0 0 0 3px ${landmarkColor}, inset 0 0 0 5px white;
@@ -48,6 +49,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}[data-landmark]:after {
     content: attr(data-landmark);
     background-color: ${landmarkColor};
+    padding: 3px 8px;
   }
   .${focusClass}:focus {
     outline: 3px dotted purple;
