@@ -158,7 +158,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}:after {
     color: white;
     font-family: sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     font-weight: bold;
     position: absolute;
     overflow: visible;
@@ -172,7 +172,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}[data-heading]:after {
     content: attr(data-heading);
     background-color: ${headingColor};
-    padding: 3px 7px 3px 8px;
+    padding: 2px 7px 2px 8px;
   }
   .${highlightClass}[data-landmark] {
     box-shadow: inset 0 0 0 3px ${landmarkColor}, inset 0 0 0 5px white;
@@ -238,6 +238,7 @@ function highlightElement (dataId) {
 
 function clearHighlights () {
   removeOverlays();
+  removeFocusOutlines();
   document.removeEventListener('focus', focusListener);
   document.removeEventListener('blur', blurListener);
 }
@@ -247,7 +248,6 @@ function focusListener (event) {
 }
 
 function blurListener (event) {
-  removeFocusClass(currentHighlight);
   addHighlightBox(currentHighlight);
 }
 
@@ -273,6 +273,7 @@ function setFocus (elementInfo) {
 */
 function addHighlightBox (elementInfo) {
   removeOverlays();
+  removeFocusOutlines();
   const { element, prefix } = elementInfo;
   if (element) {
     const boundingRect = element.getBoundingClientRect();
@@ -319,14 +320,16 @@ function removeOverlays () {
 }
 
 /*
-*   removeFocusClass: Remove CSS class that displays a visual outline indicator
-*   to show that an element has focus.
+*   removeFocusOutlines: Remove CSS class that displays a focus outline for
+*   the currently highlighted element (when the user transfers focus from the
+*   sidebar to the page), from all elements that currently have the class.
 */
-function removeFocusClass (elementInfo) {
-  const { element } = elementInfo;
-  if (element) {
+function removeFocusOutlines () {
+  const elements = document.querySelectorAll(`.${focusClass}`);
+  Array.prototype.forEach.call(elements, function (element) {
+    if (_constants_js__WEBPACK_IMPORTED_MODULE_1__.debug) { console.debug(`focusOutline: ${element.tagName}`); }
     element.classList.remove(focusClass);
-  }
+  });
 }
 
 
