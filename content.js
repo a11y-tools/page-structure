@@ -140,8 +140,10 @@ __webpack_require__.r(__webpack_exports__);
 var currentHighlight = {};
 
 const highlightClass = 'ilps-highlight';
-const focusClass = 'ilps-focus';
-const styleName = 'ilps-styles';
+const focusClass     = 'ilps-focus';
+const styleName      = 'ilps-styles';
+const headingColor   = '#ff552e'; // illini-orange
+const landmarkColor  = '#1d58a7'; // industrial-blue
 
 const styleTemplate = document.createElement('template');
 styleTemplate.innerHTML = `
@@ -154,7 +156,7 @@ styleTemplate.innerHTML = `
     z-index: 10000;
   }
   .${highlightClass}:after {
-    color: #fff;
+    color: white;
     font-size: 120%;
     font-weight: bold;
     position: absolute;
@@ -164,13 +166,19 @@ styleTemplate.innerHTML = `
     right: 0;
     z-index: 20000;
   }
+  .${highlightClass}[data-heading] {
+    box-shadow: inset 0 0 0 3px ${headingColor}, inset 0 0 0 5px white;
+  }
   .${highlightClass}[data-heading]:after {
     content: attr(data-heading);
-    background-color: #ff552e;
+    background-color: ${headingColor};
+  }
+  .${highlightClass}[data-landmark] {
+    box-shadow: inset 0 0 0 3px ${landmarkColor}, inset 0 0 0 5px white;
   }
   .${highlightClass}[data-landmark]:after {
     content: attr(data-landmark);
-    background-color: #1d58a7;
+    background-color: ${landmarkColor};
   }
   .${focusClass}:focus {
     outline: 3px dotted purple;
@@ -275,10 +283,6 @@ function addHighlightBox (elementInfo) {
 *   that appears as a highlighted border around element corresponding to 'rect'.
 */
 function createOverlay (rect, prefix, tagName) {
-  const headingColor  = '#ff552e'; // illini-orange
-  const landmarkColor = '#1d58a7'; // industrial-blue
-  const boxShadowColor = prefix === 'h-' ? headingColor : landmarkColor;
-  const boxShadow = `inset 0 0 0 3px ${boxShadowColor}, inset 0 0 0 5px white`;
   const dataAttrib = prefix === 'h-' ? 'data-heading' : 'data-landmark';
 
   const minWidth = 68, minHeight = 27;
@@ -288,8 +292,6 @@ function createOverlay (rect, prefix, tagName) {
   const div = document.createElement('div');
   div.setAttribute('class', highlightClass);
   div.setAttribute(dataAttrib, tagName.toLowerCase());
-
-  div.style.setProperty('box-shadow', boxShadow);
   div.style.setProperty('border-radius', radius + 'px');
 
   div.style.left   = Math.round(rect.left - offset + window.scrollX) + 'px';
