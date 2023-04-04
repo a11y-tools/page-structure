@@ -8,27 +8,29 @@ import { dataAttribName } from './constants.js';
 var currentHighlight = {};
 
 const highlightClass = 'ilps-highlight';
-const highlightProperties = `{
-  position: absolute;
-  overflow: hidden;
-  box-sizing: border-box;
-  pointer-events: auto;
-  z-index: 10000;
-}`;
-
 const focusClass = 'ilps-focus';
-const focusProperties = `{
-  outline: 3px dotted purple;
-}`;
 
-// Add highlighting stylesheet to document
+const styleTemplate = document.createElement('template');
+styleTemplate.innerHTML = `
+<style title="${dataAttribName}">
+  .${highlightClass} {
+    position: absolute;
+    overflow: hidden;
+    box-sizing: border-box;
+    pointer-events: auto;
+    z-index: 10000;
+  }
+  .${focusClass}:focus {
+    outline: 3px dotted purple;
+  }
+</style>
+`;
+
+// Add highlighting stylesheet to document if not already there
 export function addHighlightStyle () {
-  const style = document.createElement('style');
-  style.textContent = `
-    .${highlightClass} ${highlightProperties}
-    .${focusClass}:focus ${focusProperties}
-  `;
-  document.body.appendChild(style);
+  if (document.querySelector(`style[title="${dataAttribName}"]`) === null) {
+    document.body.appendChild(styleTemplate.content.cloneNode(true));
+  }
 }
 
 function getElementWithDataAttrib (dataId) {
@@ -150,8 +152,8 @@ function createOverlay (rect, prefix, tagName) {
 *   by previous calls to 'addHighlightBox'.
 */
 function removeOverlays () {
-  let selector = `div.${highlightClass}`;
-  let elements = document.querySelectorAll(selector);
+  const selector = `div.${highlightClass}`;
+  const elements = document.querySelectorAll(selector);
   Array.prototype.forEach.call(elements, function (element) {
     document.body.removeChild(element);
   });

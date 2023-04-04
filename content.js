@@ -141,11 +141,38 @@ __webpack_require__.r(__webpack_exports__);
 var currentHighlight = {};
 
 const highlightClass = 'ilps-highlight';
+const focusClass = 'ilps-focus';
+
+const styleTemplate = document.createElement('template');
+styleTemplate.innerHTML = `
+<style title="${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}">
+  .${highlightClass} {
+    position: absolute;
+    overflow: hidden;
+    box-sizing: border-box;
+    pointer-events: auto;
+    z-index: 10000;
+  }
+  .${focusClass}:focus {
+    outline: 3px dotted purple;
+  }
+</style>
+`;
+
+// Add highlighting stylesheet to document if not already there
+function addHighlightStyle () {
+  if (document.querySelector(`style[title="${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}"]`) === null) {
+    document.body.appendChild(styleTemplate.content.cloneNode(true));
+  }
+}
+
+/*
+const highlightClass = 'ilps-highlight';
 const highlightProperties = `{
   position: absolute;
   overflow: hidden;
   box-sizing: border-box;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 10000;
 }`;
 
@@ -155,7 +182,7 @@ const focusProperties = `{
 }`;
 
 // Add highlighting stylesheet to document
-function addHighlightStyle () {
+export function addHighlightStyle () {
   const style = document.createElement('style');
   style.textContent = `
     .${highlightClass} ${highlightProperties}
@@ -163,6 +190,7 @@ function addHighlightStyle () {
   `;
   document.body.appendChild(style);
 }
+*/
 
 function getElementWithDataAttrib (dataId) {
   const info = { element: null };
@@ -215,6 +243,7 @@ function focusListener (event) {
 }
 
 function blurListener (event) {
+  // removeFocusClass(currentHighlight);
   addHighlightBox(currentHighlight);
 }
 
@@ -243,7 +272,7 @@ function addHighlightBox (elementInfo) {
   const { element, prefix } = elementInfo;
   if (element) {
     const boundingRect = element.getBoundingClientRect();
-    const overlayDiv = createOverlay(boundingRect, prefix);
+    const overlayDiv = createOverlay(boundingRect, prefix, element.tagName);
     document.body.appendChild(overlayDiv);
   }
 }
@@ -252,7 +281,7 @@ function addHighlightBox (elementInfo) {
 *   createOverlay: Use bounding client rectangle and offsets to create an element
 *   that appears as a highlighted border around element corresponding to 'rect'.
 */
-function createOverlay (rect, prefix) {
+function createOverlay (rect, prefix, tagName) {
   const headingColor  = '#ff552e'; // illini-orange
   const landmarkColor = '#1d58a7'; // industrial-blue
   const boxShadowColor = prefix === 'h-' ? headingColor : landmarkColor;
@@ -264,6 +293,7 @@ function createOverlay (rect, prefix) {
 
   const div = document.createElement('div');
   div.setAttribute('class', highlightClass);
+  div.setAttribute('title', `${tagName} element`);
 
   div.style.setProperty('box-shadow', boxShadow);
   div.style.setProperty('border-radius', radius + 'px');
@@ -282,11 +312,22 @@ function createOverlay (rect, prefix) {
 *   by previous calls to 'addHighlightBox'.
 */
 function removeOverlays () {
-  let selector = `div.${highlightClass}`;
-  let elements = document.querySelectorAll(selector);
+  const selector = `div.${highlightClass}`;
+  const elements = document.querySelectorAll(selector);
   Array.prototype.forEach.call(elements, function (element) {
     document.body.removeChild(element);
   });
+}
+
+/*
+*   removeFocusClass: remove the CSS class that displays a visual outline indicator
+*   to show that an element has focus
+*/
+function removeFocusClass (elementInfo) {
+  const { element } = elementInfo;
+  if (element) {
+    element.classList.remove(focusClass);
+  }
 }
 
 
