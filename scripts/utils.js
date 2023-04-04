@@ -2,7 +2,9 @@
 *   utils.js
 */
 
-// Generator constructor
+/*
+*   Generator function (constructor)
+*/
 function *nextValue () {
   let counter = 0;
   while (true) {
@@ -10,11 +12,16 @@ function *nextValue () {
   }
 }
 
-// Generator instance
-const generator = nextValue();
+/*
+*   Generator object (instance): used by getDataId
+*/
+const idGenerator = nextValue();
 
+/*
+*   getDataId: return concatenation of prefix and next value of counter
+*/
 export function getDataId (prefix) {
-  return `${prefix}-${generator.next().value}`;
+  return `${prefix}-${idGenerator.next().value}`;
 }
 
 /*
@@ -39,6 +46,52 @@ export function getDescendantTextContent (node, predicate, results) {
         break;
     }
   }
+}
+
+/*
+*   isNonEmptyString: called by getAccessibleName
+*/
+function isNonEmptyString (str) {
+  return typeof str === 'string' && str.length;
+}
+
+/*
+*   getTextContent: called by getAccessibleName
+*/
+function getTextContent (elem) {
+
+  function getTextRec (e, strings) {
+    // If text node, get the text and return
+    if (e.nodeType === Node.TEXT_NODE) {
+      strings.push(e.data);
+    }
+    else {
+      // If element node, traverse all child elements looking for text
+      if (e.nodeType === Node.ELEMENT_NODE) {
+        // If IMG or AREA element, use ALT content if defined
+        let tagName = e.tagName.toLowerCase();
+        if (tagName === 'img' || tagName === 'area') {
+          if (e.alt) {
+            strings.push(e.alt);
+          }
+        }
+        else {
+          let c = e.firstChild;
+          while (c) {
+            getTextRec(c, strings);
+            c = c.nextSibling;
+          } // end loop
+        }
+      }
+    }
+  } // end getTextRec
+
+  let strings = [];
+  getTextRec(elem, strings);
+  if (strings.length) {
+    return strings.join(' ');
+  }
+  return '';
 }
 
 /*
@@ -85,45 +138,6 @@ export function getAccessibleName (element) {
 }
 
 /*
-**  getTextContent: called by getAccessibleName
-*/
-function getTextContent (elem) {
-
-  function getTextRec (e, strings) {
-    // If text node, get the text and return
-    if (e.nodeType === Node.TEXT_NODE) {
-      strings.push(e.data);
-    }
-    else {
-      // If element node, traverse all child elements looking for text
-      if (e.nodeType === Node.ELEMENT_NODE) {
-        // If IMG or AREA element, use ALT content if defined
-        let tagName = e.tagName.toLowerCase();
-        if (tagName === 'img' || tagName === 'area') {
-          if (e.alt) {
-            strings.push(e.alt);
-          }
-        }
-        else {
-          let c = e.firstChild;
-          while (c) {
-            getTextRec(c, strings);
-            c = c.nextSibling;
-          } // end loop
-        }
-      }
-    }
-  } // end getTextRec
-
-  let strings = [];
-  getTextRec(elem, strings);
-  if (strings.length) {
-    return strings.join(' ');
-  }
-  return '';
-}
-
-/*
 *   isVisible: Recursively check element properties from getComputedStyle
 *   until document element is reached, to determine whether element or any
 *   of its ancestors has properties set that affect its visibility.
@@ -147,11 +161,4 @@ export function isVisible (element) {
   const parentNode = (element.parentNode instanceof ShadowRoot)
     ? element.parentNode.host : element.parentNode;
   return isVisible(parentNode);
-}
-
-/*
-*   isNonEmptyString
-*/
-function isNonEmptyString (str) {
-  return typeof str === 'string' && str.length;
 }
