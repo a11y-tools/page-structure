@@ -2,10 +2,12 @@
 *   main.js
 */
 
-import { dataAttribName, separator, debug } from './constants.js';
+import { dataAttribName, debug } from './constants.js';
 import traverseDom from './traversal.js';
 import { addHighlightStyle, highlightElement, clearHighlights } from './highlight.js';
 import { getDataId, getDescendantTextContent, getAccessibleName, isVisible } from './utils.js';
+
+const separator = '--------------------------------';
 
 if (debug) {
   console.debug(separator);

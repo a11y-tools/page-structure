@@ -3,7 +3,7 @@
 */
 
 import traverseDom from './traversal.js';
-import { dataAttribName } from './constants.js';
+import { dataAttribName, debug } from './constants.js';
 export { addHighlightStyle, highlightElement, clearHighlights };
 
 var currentHighlight = {};
@@ -51,7 +51,7 @@ function getElementWithDataAttrib (dataId) {
 
   // Search DOM for element with dataId
   traverseDom(documentStart, conditionalSave, info);
-  console.log(`info.element: ${info.element.tagName}`);
+  if (debug) { console.log(`info.element: ${info.element.tagName}`); }
   return info.element;
 }
 

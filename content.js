@@ -8,16 +8,14 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "dataAttribName": () => (/* binding */ dataAttribName),
-/* harmony export */   "debug": () => (/* binding */ debug),
-/* harmony export */   "separator": () => (/* binding */ separator)
+/* harmony export */   "debug": () => (/* binding */ debug)
 /* harmony export */ });
 /*
 *   constants.js
 */
 
 const dataAttribName = 'data-ilps';
-const separator = '--------------------------------';
-const debug = true;
+const debug = false;
 
 
 /***/ }),
@@ -184,7 +182,7 @@ function getElementWithDataAttrib (dataId) {
 
   // Search DOM for element with dataId
   (0,_traversal_js__WEBPACK_IMPORTED_MODULE_0__["default"])(documentStart, conditionalSave, info);
-  console.log(`info.element: ${info.element.tagName}`);
+  if (_constants_js__WEBPACK_IMPORTED_MODULE_1__.debug) { console.log(`info.element: ${info.element.tagName}`); }
   return info.element;
 }
 
@@ -193,7 +191,7 @@ function highlightElement (dataId) {
   const blockVal = prefix === 'h-' ? 'center' : 'start';
   clearHighlights();
 
-  if (debug) { console.debug(`highlightElement: ${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}="${dataId}"`); }
+  if (_constants_js__WEBPACK_IMPORTED_MODULE_1__.debug) { console.debug(`highlightElement: ${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}="${dataId}"`); }
   const element = getElementWithDataAttrib(dataId);
   if (element === null) {
     console.warn(`Unable to find element with attribute: ${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}="${dataId}"`);
@@ -546,8 +544,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const separator = '--------------------------------';
+
 if (_constants_js__WEBPACK_IMPORTED_MODULE_0__.debug) {
-  console.debug(_constants_js__WEBPACK_IMPORTED_MODULE_0__.separator);
+  console.debug(separator);
   console.debug(`URL: ${document.URL}`);
 }
 
@@ -740,7 +740,7 @@ function saveLandmarkInfo (element, info, ancestor) {
 }
 
 function logLandmarkNodes (root) {
-  console.debug(_constants_js__WEBPACK_IMPORTED_MODULE_0__.separator);
+  console.debug(separator);
   function traverseNodes (startNode, level) {
     startNode.descendants.forEach(node => {
       const text = `${node.info.role}: ${node.info.name}`;
@@ -749,7 +749,7 @@ function logLandmarkNodes (root) {
     });
   }
   traverseNodes(root, 0);
-  console.debug(_constants_js__WEBPACK_IMPORTED_MODULE_0__.separator);
+  console.debug(separator);
 }
 
 function saveInfo (element, info, ancestor) {
