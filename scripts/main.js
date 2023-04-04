@@ -20,22 +20,18 @@ if (debug) {
 var panelPort = browser.runtime.connect({ name: 'content' });
 panelPort.onMessage.addListener(messageHandler);
 
-/*
-*  Add stylesheet to document
-*/
-addHighlightStyle();
-
 function messageHandler (message) {
   switch (message.id) {
-    case 'getInfo':
+    case 'getInfo':     /* message sent once on tab activation or update */
       getStructureInfo(panelPort);
+      addHighlightStyle();
       break;
 
-    case 'highlight':
+    case 'highlight':   /* message may be sent numerous times for active tab */
       highlightElement(message.dataId);
       break;
 
-    case 'clear':
+    case 'clear':       /* message may be sent numerous times for active tab */
       clearHighlights();
       break;
   }

@@ -32,6 +32,7 @@ styleTemplate.innerHTML = `
 function addHighlightStyle () {
   if (document.querySelector(`style[title="${styleName}"]`) === null) {
     document.body.appendChild(styleTemplate.content.cloneNode(true));
+    if (debug) { console.debug(`Added style element (${styleName}) to document`); }
   }
 }
 
@@ -51,7 +52,7 @@ function getElementWithDataAttrib (dataId) {
 
   // Search DOM for element with dataId
   traverseDom(documentStart, conditionalSave, info);
-  if (debug) { console.log(`info.element: ${info.element.tagName}`); }
+  if (debug) { console.debug(`info.element: ${info.element.tagName}`); }
   return info.element;
 }
 

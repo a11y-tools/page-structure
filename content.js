@@ -15,7 +15,7 @@ __webpack_require__.r(__webpack_exports__);
 */
 
 const dataAttribName = 'data-ilps';
-const debug = false;
+const debug = true;
 
 
 /***/ }),
@@ -163,6 +163,7 @@ styleTemplate.innerHTML = `
 function addHighlightStyle () {
   if (document.querySelector(`style[title="${styleName}"]`) === null) {
     document.body.appendChild(styleTemplate.content.cloneNode(true));
+    if (_constants_js__WEBPACK_IMPORTED_MODULE_1__.debug) { console.debug(`Added style element (${styleName}) to document`); }
   }
 }
 
@@ -182,7 +183,7 @@ function getElementWithDataAttrib (dataId) {
 
   // Search DOM for element with dataId
   (0,_traversal_js__WEBPACK_IMPORTED_MODULE_0__["default"])(documentStart, conditionalSave, info);
-  if (_constants_js__WEBPACK_IMPORTED_MODULE_1__.debug) { console.log(`info.element: ${info.element.tagName}`); }
+  if (_constants_js__WEBPACK_IMPORTED_MODULE_1__.debug) { console.debug(`info.element: ${info.element.tagName}`); }
   return info.element;
 }
 
@@ -557,22 +558,18 @@ if (_constants_js__WEBPACK_IMPORTED_MODULE_0__.debug) {
 var panelPort = browser.runtime.connect({ name: 'content' });
 panelPort.onMessage.addListener(messageHandler);
 
-/*
-*  Add stylesheet to document
-*/
-(0,_highlight_js__WEBPACK_IMPORTED_MODULE_2__.addHighlightStyle)();
-
 function messageHandler (message) {
   switch (message.id) {
-    case 'getInfo':
+    case 'getInfo':     /* message sent once on tab activation or update */
       getStructureInfo(panelPort);
+      (0,_highlight_js__WEBPACK_IMPORTED_MODULE_2__.addHighlightStyle)();
       break;
 
-    case 'highlight':
+    case 'highlight':   /* message may be sent numerous times for active tab */
       (0,_highlight_js__WEBPACK_IMPORTED_MODULE_2__.highlightElement)(message.dataId);
       break;
 
-    case 'clear':
+    case 'clear':       /* message may be sent numerous times for active tab */
       (0,_highlight_js__WEBPACK_IMPORTED_MODULE_2__.clearHighlights)();
       break;
   }
