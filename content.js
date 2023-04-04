@@ -142,10 +142,11 @@ var currentHighlight = {};
 
 const highlightClass = 'ilps-highlight';
 const focusClass = 'ilps-focus';
+const styleName = 'ilps-styles';
 
 const styleTemplate = document.createElement('template');
 styleTemplate.innerHTML = `
-<style title="${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}">
+<style title="${styleName}">
   .${highlightClass} {
     position: absolute;
     overflow: hidden;
@@ -161,36 +162,10 @@ styleTemplate.innerHTML = `
 
 // Add highlighting stylesheet to document if not already there
 function addHighlightStyle () {
-  if (document.querySelector(`style[title="${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}"]`) === null) {
+  if (document.querySelector(`style[title="${styleName}"]`) === null) {
     document.body.appendChild(styleTemplate.content.cloneNode(true));
   }
 }
-
-/*
-const highlightClass = 'ilps-highlight';
-const highlightProperties = `{
-  position: absolute;
-  overflow: hidden;
-  box-sizing: border-box;
-  pointer-events: auto;
-  z-index: 10000;
-}`;
-
-const focusClass = 'ilps-focus';
-const focusProperties = `{
-  outline: 3px dotted purple;
-}`;
-
-// Add highlighting stylesheet to document
-export function addHighlightStyle () {
-  const style = document.createElement('style');
-  style.textContent = `
-    .${highlightClass} ${highlightProperties}
-    .${focusClass}:focus ${focusProperties}
-  `;
-  document.body.appendChild(style);
-}
-*/
 
 function getElementWithDataAttrib (dataId) {
   const info = { element: null };
@@ -243,7 +218,6 @@ function focusListener (event) {
 }
 
 function blurListener (event) {
-  // removeFocusClass(currentHighlight);
   addHighlightBox(currentHighlight);
 }
 
@@ -317,17 +291,6 @@ function removeOverlays () {
   Array.prototype.forEach.call(elements, function (element) {
     document.body.removeChild(element);
   });
-}
-
-/*
-*   removeFocusClass: remove the CSS class that displays a visual outline indicator
-*   to show that an element has focus
-*/
-function removeFocusClass (elementInfo) {
-  const { element } = elementInfo;
-  if (element) {
-    element.classList.remove(focusClass);
-  }
 }
 
 

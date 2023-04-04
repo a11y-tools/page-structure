@@ -9,10 +9,11 @@ var currentHighlight = {};
 
 const highlightClass = 'ilps-highlight';
 const focusClass = 'ilps-focus';
+const styleName = 'ilps-styles';
 
 const styleTemplate = document.createElement('template');
 styleTemplate.innerHTML = `
-<style title="${dataAttribName}">
+<style title="${styleName}">
   .${highlightClass} {
     position: absolute;
     overflow: hidden;
@@ -28,7 +29,7 @@ styleTemplate.innerHTML = `
 
 // Add highlighting stylesheet to document if not already there
 export function addHighlightStyle () {
-  if (document.querySelector(`style[title="${dataAttribName}"]`) === null) {
+  if (document.querySelector(`style[title="${styleName}"]`) === null) {
     document.body.appendChild(styleTemplate.content.cloneNode(true));
   }
 }
