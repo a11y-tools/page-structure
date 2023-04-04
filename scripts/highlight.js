@@ -19,8 +19,27 @@ styleTemplate.innerHTML = `
     position: absolute;
     overflow: hidden;
     box-sizing: border-box;
-    pointer-events: auto;
+    pointer-events: none;
     z-index: 10000;
+  }
+  .${highlightClass}:after {
+    color: #fff;
+    font-size: 120%;
+    font-weight: bold;
+    position: absolute;
+    overflow: visible;
+    padding: 1px 8px 3px;
+    top: 3px;
+    right: 0;
+    z-index: 20000;
+  }
+  .${highlightClass}[data-heading]:after {
+    content: attr(data-heading);
+    background-color: #ff552e;
+  }
+  .${highlightClass}[data-landmark]:after {
+    content: attr(data-landmark);
+    background-color: #1d58a7;
   }
   .${focusClass}:focus {
     outline: 3px dotted purple;
@@ -129,6 +148,7 @@ function createOverlay (rect, prefix, tagName) {
   const landmarkColor = '#1d58a7'; // industrial-blue
   const boxShadowColor = prefix === 'h-' ? headingColor : landmarkColor;
   const boxShadow = `inset 0 0 0 3px ${boxShadowColor}, inset 0 0 0 5px white`;
+  const dataAttrib = prefix === 'h-' ? 'data-heading' : 'data-landmark';
 
   const minWidth = 68, minHeight = 27;
   const offset = prefix === 'h-' ? 5 : 0;
@@ -136,7 +156,7 @@ function createOverlay (rect, prefix, tagName) {
 
   const div = document.createElement('div');
   div.setAttribute('class', highlightClass);
-  div.setAttribute('title', `${tagName} element`);
+  div.setAttribute(dataAttrib, tagName.toLowerCase());
 
   div.style.setProperty('box-shadow', boxShadow);
   div.style.setProperty('border-radius', radius + 'px');
