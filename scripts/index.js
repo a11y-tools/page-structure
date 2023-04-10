@@ -1,5 +1,5 @@
 /*
-*   main.js
+*   index.js
 */
 
 import { dataAttribName, debug } from './constants.js';

@@ -576,7 +576,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _highlight_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 /*
-*   main.js
+*   index.js
 */
 
 

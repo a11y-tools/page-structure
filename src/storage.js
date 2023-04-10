@@ -3,7 +3,7 @@
 */
 
 export const defaultOptions = {
-  autoHighlight: false
+  autoHighlight: true
 };
 
 /*
