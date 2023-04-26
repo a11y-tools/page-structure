@@ -29,7 +29,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}:after {
     color: white;
     font-family: sans-serif;
-    font-size: 1.2em;
+    font-size: 15px;
     font-weight: bold;
     position: absolute;
     overflow: visible;
