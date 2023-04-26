@@ -155,7 +155,7 @@ function getHeadingInfo (element) {
   const contentArray = [];
   getDescendantTextContent(element, isVisible, contentArray);
   return {
-    name: element.tagName,
+    name: element.tagName.toLowerCase(),
     text: contentArray.length ? contentArray.join(' ') : '',
     visible: isVisible(element)
   }
@@ -165,7 +165,7 @@ function saveHeadingInfo (element, info) {
   if (isHeading(element)) {
     const headingInfo = getHeadingInfo(element);
     if (headingInfo.visible) {
-      const dataId = getDataId('h');
+      const dataId = getDataId(headingInfo.name);
       headingInfo.dataId = dataId;
       element.setAttribute(dataAttribName, dataId);
       info.headings.push(headingInfo);
@@ -184,7 +184,7 @@ function saveLandmarkInfo (element, info, ancestor) {
   let landmarkNode = null;
   const landmarkInfo = testForLandmark(element);
   if (landmarkInfo && landmarkInfo.visible) {
-    const dataId = getDataId('l');
+    const dataId = getDataId(landmarkInfo.role);
     landmarkInfo.dataId = dataId;
     element.setAttribute(dataAttribName, dataId);
     landmarkNode = getLandmarkNode(landmarkInfo);

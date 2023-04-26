@@ -20,8 +20,8 @@ const idGenerator = nextValue();
 /*
 *   getDataId: return concatenation of prefix and next value of counter
 */
-export function getDataId (prefix) {
-  return `${prefix}-${idGenerator.next().value}`;
+export function getDataId (suffix) {
+  return `${idGenerator.next().value}-${suffix}`;
 }
 
 /*

@@ -15,7 +15,7 @@ __webpack_require__.r(__webpack_exports__);
 */
 
 const dataAttribName = 'data-ilps';
-const debug = true;
+const debug = false;
 
 
 /***/ }),
@@ -144,6 +144,8 @@ const focusClass     = 'ilps-focus';
 const styleName      = 'ilps-styles';
 const headingColor   = '#ff552e'; // illini-orange
 const landmarkColor  = '#1d58a7'; // industrial-blue
+const dataHeading    = `${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}-heading`;
+const dataLandmark   = `${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}-landmark`;
 
 const styleTemplate = document.createElement('template');
 styleTemplate.innerHTML = `
@@ -166,19 +168,19 @@ styleTemplate.innerHTML = `
     right: 0;
     z-index: 20000;
   }
-  .${highlightClass}[data-heading] {
+  .${highlightClass}[${dataHeading}] {
     box-shadow: inset 0 0 0 3px ${headingColor}, inset 0 0 0 5px white;
   }
-  .${highlightClass}[data-heading]:after {
-    content: attr(data-heading);
+  .${highlightClass}[${dataHeading}]:after {
+    content: attr(${dataHeading});
     background-color: ${headingColor};
     padding: 2px 7px 2px 8px;
   }
-  .${highlightClass}[data-landmark] {
+  .${highlightClass}[${dataLandmark}] {
     box-shadow: inset 0 0 0 3px ${landmarkColor}, inset 0 0 0 5px white;
   }
-  .${highlightClass}[data-landmark]:after {
-    content: attr(data-landmark);
+  .${highlightClass}[${dataLandmark}]:after {
+    content: attr(${dataLandmark});
     background-color: ${landmarkColor};
     padding: 3px 8px 4px;
   }
@@ -187,6 +189,10 @@ styleTemplate.innerHTML = `
   }
 </style>
 `;
+
+function isHeadingElement (name) {
+  return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(name);
+}
 
 // Add highlighting stylesheet to document if not already there
 function addHighlightStyle () {
@@ -217,8 +223,8 @@ function getElementWithDataAttrib (dataId) {
 }
 
 function highlightElement (dataId) {
-  const prefix = dataId.substring(0, 2);
-  const blockVal = prefix === 'h-' ? 'center' : 'start';
+  const suffix = dataId.split('-')[1];
+  const blockVal = isHeadingElement(suffix) ? 'center' : 'start';
   clearHighlights();
 
   if (_constants_js__WEBPACK_IMPORTED_MODULE_1__.debug) { console.debug(`highlightElement: ${_constants_js__WEBPACK_IMPORTED_MODULE_1__.dataAttribName}="${dataId}"`); }
@@ -228,7 +234,7 @@ function highlightElement (dataId) {
     return;
   }
 
-  const elementInfo = { element: element, prefix: prefix };
+  const elementInfo = { element: element, suffix: suffix };
   currentHighlight = elementInfo;
   addHighlightBox(elementInfo);
   element.scrollIntoView({ behavior: 'smooth', block: blockVal });
@@ -274,10 +280,10 @@ function setFocus (elementInfo) {
 function addHighlightBox (elementInfo) {
   removeOverlays();
   removeFocusOutlines();
-  const { element, prefix } = elementInfo;
+  const { element, suffix } = elementInfo;
   if (element) {
     const boundingRect = element.getBoundingClientRect();
-    const overlayDiv = createOverlay(boundingRect, prefix, element.tagName);
+    const overlayDiv = createOverlay(boundingRect, suffix);
     document.body.appendChild(overlayDiv);
   }
 }
@@ -286,16 +292,17 @@ function addHighlightBox (elementInfo) {
 *   createOverlay: Use bounding client rectangle and offsets to create an element
 *   that appears as a highlighted border around element corresponding to 'rect'.
 */
-function createOverlay (rect, prefix, tagName) {
-  const dataAttrib = prefix === 'h-' ? 'data-heading' : 'data-landmark';
+function createOverlay (rect, suffix) {
+  const isHeading = isHeadingElement(suffix);
+  const dataAttrib = isHeading ? dataHeading : dataLandmark;
 
   const minWidth = 68, minHeight = 27;
-  const offset = prefix === 'h-' ? 5 : 0;
-  const radius = prefix === 'h-' ? 3 : 0;
+  const offset = isHeading ? 5 : 0;
+  const radius = isHeading ? 3 : 0;
 
   const div = document.createElement('div');
   div.setAttribute('class', highlightClass);
-  div.setAttribute(dataAttrib, tagName.toLowerCase());
+  div.setAttribute(dataAttrib, suffix);
   div.style.setProperty('border-radius', radius + 'px');
 
   div.style.left   = Math.round(rect.left - offset + window.scrollX) + 'px';
@@ -366,8 +373,8 @@ const idGenerator = nextValue();
 /*
 *   getDataId: return concatenation of prefix and next value of counter
 */
-function getDataId (prefix) {
-  return `${prefix}-${idGenerator.next().value}`;
+function getDataId (suffix) {
+  return `${idGenerator.next().value}-${suffix}`;
 }
 
 /*
@@ -732,7 +739,7 @@ function getHeadingInfo (element) {
   const contentArray = [];
   (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getDescendantTextContent)(element, _utils_js__WEBPACK_IMPORTED_MODULE_3__.isVisible, contentArray);
   return {
-    name: element.tagName,
+    name: element.tagName.toLowerCase(),
     text: contentArray.length ? contentArray.join(' ') : '',
     visible: (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.isVisible)(element)
   }
@@ -742,7 +749,7 @@ function saveHeadingInfo (element, info) {
   if (isHeading(element)) {
     const headingInfo = getHeadingInfo(element);
     if (headingInfo.visible) {
-      const dataId = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getDataId)('h');
+      const dataId = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getDataId)(headingInfo.name);
       headingInfo.dataId = dataId;
       element.setAttribute(_constants_js__WEBPACK_IMPORTED_MODULE_0__.dataAttribName, dataId);
       info.headings.push(headingInfo);
@@ -761,7 +768,7 @@ function saveLandmarkInfo (element, info, ancestor) {
   let landmarkNode = null;
   const landmarkInfo = testForLandmark(element);
   if (landmarkInfo && landmarkInfo.visible) {
-    const dataId = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getDataId)('l');
+    const dataId = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.getDataId)(landmarkInfo.role);
     landmarkInfo.dataId = dataId;
     element.setAttribute(_constants_js__WEBPACK_IMPORTED_MODULE_0__.dataAttribName, dataId);
     landmarkNode = getLandmarkNode(landmarkInfo);
