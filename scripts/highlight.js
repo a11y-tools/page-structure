@@ -43,7 +43,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}[${dataHeading}]:after {
     content: attr(${dataHeading});
     background-color: ${headingColor};
-    padding: 2px 7px 2px 8px;
+    padding: 4px 8px;
   }
   .${highlightClass}[${dataLandmark}] {
     box-shadow: inset 0 0 0 3px ${landmarkColor}, inset 0 0 0 5px white;
@@ -51,7 +51,7 @@ styleTemplate.innerHTML = `
   .${highlightClass}[${dataLandmark}]:after {
     content: attr(${dataLandmark});
     background-color: ${landmarkColor};
-    padding: 3px 8px 4px;
+    padding: 3px 8px 5px;
   }
   .${focusClass}:focus {
     outline: 3px dotted purple;
