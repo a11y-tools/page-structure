@@ -34,18 +34,3 @@ for in-depth explanations of the differences.
 `panel.js`
 * On receiving `info` message from `content.js`, calls `updateSidebar`,
   which populates the title and listbox areas with new data
-
-## webpack preprocessing
-
-The `scripts` folder now contains JavaScript modules that must be preprocessed
-by webpack (see `webpack.config.js`) to produce the bundled output file named `content.js` in the `src` folder. It is this latter file that the extension utilizes when it runs its content script.
-
-To perform this preprocessing build step, use `npm run build` (see the `package.json` file).
-
-## web-ext build
-
-To build a new ZIP file for submitting new versions of the extension to AMO, cd to the `src` folder (important!) and issue the following command:
-
-    web-ext build -a ../releases
-
-This will place the new ZIP file, with filename based on the manifest.json version property, in the `releases` folder.
