@@ -34,12 +34,3 @@ for in-depth explanations of the differences.
 `panel.js`
 * On receiving `info` message from `content.js`, calls `updateSidebar`,
   which populates the title and listbox areas with new data
-
-## Next steps
-
-* The relationship between the listbox and the 'Highlight Selected' and 'Clear
-  Highlighting' buttons needs to be sorted out.
-
-* Initial thoughts are that the buttons need to be incorporated into the
-  listbox custom element, since they connect the user to interactions with the
-  options (namely, activations) in that particular list.
