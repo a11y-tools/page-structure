@@ -1,0 +1,21 @@
+The Page Structure add-on can help you determine whether a web page meets the accessibility requirements for Page Structure, as defined in the <a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines (WCAG) 2.1</a> and <a href="https://www.w3.org/TR/wai-aria-1.2/"> Accessible Rich Internet Applications (WAI-ARIA) 1.2</a> specifications. It provides the information you need to answer the following accessibility-related questions:
+
+<ul>
+<li><strong>Page Title</strong>: Does the title adequately describe the purpose or main content of the page?</li>
+
+<li><strong>Headings</strong>: Are HTML headings used (h1 ... h6) to break down the content into sections and subsections? Do they properly indicate the hierarchical structure of the content? Does each heading accurately describe the section or subsection that follows?</li>
+
+<li><strong>Landmarks</strong>: Are ARIA landmarks used to indicate functional regions on the page such as main, navigation, banner (header), contentinfo (footer) and complementary (aside)? When there are multiple occurrences of the same type of landmark region, does each one have a unique descriptive label?</li>
+</ul>
+
+Why use the Page Structure add-on?
+
+Users of screen reader software, such as people who are blind or with low vision, rely on the heading and landmark navigation it provides to (a) get an overview of how the content on the page is structured, and (b) quickly and efficiently move to one of these headings or landmark regions.
+
+For example, at the user's request, screen reader software will sequentially read through a list of headings, indicating the heading level of each, and enable the user to select one of these to navigate to. Likewise with landmarks, the software will list all of the available landmark regions on the page, from which the user may choose.
+
+What makes Page Structure useful? By collecting all of the headings and landmarks available on a page into their respective lists and displaying these in the sidebar, you are provided a perspective that is much closer to what a screen reader user will have.
+
+This allows you, the developer or author of the page, to fine tune and scrutinize the wording and labeling choices of headings and landmarks to ensure that when they are extracted from the page and presented as a list to a screen reader user, they make sense in that context.
+
+When you select a heading or landmark in the sidebar, Page Structure can highlight and scroll into view the selected item on the page. Headings are highlighted with an orange outline, and landmarks use a dark blue outline.
