@@ -1,10 +1,10 @@
 {
   "devDependencies": {
-    "webpack": "^5.76.3",
-    "webpack-cli": "^5.0.1"
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack"
   },
   "type": "module"
 }

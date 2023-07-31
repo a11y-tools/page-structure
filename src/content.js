@@ -7,8 +7,8 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "dataAttribName": () => (/* binding */ dataAttribName),
-/* harmony export */   "debug": () => (/* binding */ debug)
+/* harmony export */   dataAttribName: () => (/* binding */ dataAttribName),
+/* harmony export */   debug: () => (/* binding */ debug)
 /* harmony export */ });
 /*
 *   constants.js
@@ -123,9 +123,9 @@ function traverseDom (startElement, callbackFn, storageObj, contextObj = null) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "addHighlightStyle": () => (/* binding */ addHighlightStyle),
-/* harmony export */   "clearHighlights": () => (/* binding */ clearHighlights),
-/* harmony export */   "highlightElement": () => (/* binding */ highlightElement)
+/* harmony export */   addHighlightStyle: () => (/* binding */ addHighlightStyle),
+/* harmony export */   clearHighlights: () => (/* binding */ clearHighlights),
+/* harmony export */   highlightElement: () => (/* binding */ highlightElement)
 /* harmony export */ });
 /* harmony import */ var _traversal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
@@ -346,10 +346,10 @@ function removeFocusOutlines () {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getAccessibleName": () => (/* binding */ getAccessibleName),
-/* harmony export */   "getDataId": () => (/* binding */ getDataId),
-/* harmony export */   "getDescendantTextContent": () => (/* binding */ getDescendantTextContent),
-/* harmony export */   "isVisible": () => (/* binding */ isVisible)
+/* harmony export */   getAccessibleName: () => (/* binding */ getAccessibleName),
+/* harmony export */   getDataId: () => (/* binding */ getDataId),
+/* harmony export */   getDescendantTextContent: () => (/* binding */ getDescendantTextContent),
+/* harmony export */   isVisible: () => (/* binding */ isVisible)
 /* harmony export */ });
 /*
 *   utils.js
